@@ -1,10 +1,12 @@
 import pandas as pd
 
-tmdb_data = pd.read_csv('../data/TMDB_movie_dataset_v11.csv')
+data_path = '../data'
+tmdb_data = pd.read_csv(f'{data_path}/TMDB_movie_dataset_v11.csv')
 
 
 import requests
-
+from tqdm import tqdm
+tqdm.pandas()
 def get_wikidata_id(tmdb_id):
     url = "https://query.wikidata.org/sparql"
     query = """
@@ -22,5 +24,5 @@ def get_wikidata_id(tmdb_id):
     else:
         return None
 
-tmdb_data['wikidata_id'] = tmdb_data['id'].parallel_apply(get_wikidata_id)
-tmdb_data.to_csv('../data/TMDB_movie_dataset_v12.csv', index=False)
+tmdb_data['wikidata_id'] = tmdb_data['id'].progress_apply(get_wikidata_id)
+tmdb_data.to_csv(f'{data_path}/TMDB_movie_dataset_v12.csv', index=False)
