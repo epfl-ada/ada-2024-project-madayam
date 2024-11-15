@@ -2,7 +2,7 @@
 
 | ![generated using GPT/DALL-E](cover_1.webp) |
 |:--:|
-| *generated using GPT/DALL-E* |
+| *generated using DALL-E* |
 
 ## Abstract
 
