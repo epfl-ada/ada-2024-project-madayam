@@ -16,11 +16,11 @@ We briefly outline the research questions that we aim to address in this project
 
 What key features or metrics make an original movie more likely to be remade? Explicitly, we are interested in:
 
-1. Whether the genre of the movie, the time gap between the original and the remake, the popularity, revenue, and critical reception are contributing factors to the likelihood of a movie being remade.
+1. Whether the genre of the movie, the sentiment of the plot line (which could be determined by inference of LLM model), the time gap between the original and the remake, the popularity, revenue, and critical reception are contributing factors to the likelihood of a movie being remade.
 
 2. How these factors can contribute to a movie being remade more than once?
 
-We can formalize this section as follows: "What is the difference in the distribution of the movies that are remade and the movies that are not remade?"
+Overall, we can formalize this section as follows: "What is the difference in the distribution of the movies that are remade and the movies that are not remade?"
 
 ### Differences between Original and Remake
 
@@ -30,9 +30,9 @@ In this part, we are interested in comparing the original movie with its remakes
 
 4. The time gap between the original and the remake.
 
-5. The contextual drifts that may be in the remade version, can be determined using LLMs.
+5. The contextual similarities such as historical events that may co-occur with the original and remade version.
 
-We can formalize this section as follows: "What is the joint/difference of the distribution of the original movie and the remakes?"
+To conclude, we can summarise this section as follows: "What is the joint/difference of the distribution of the original movie and the remakes?"
 
 ## Datasets
 
