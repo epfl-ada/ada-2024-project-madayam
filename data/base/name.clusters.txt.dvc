@@ -1,0 +1,5 @@
+outs:
+- md5: c190841cda0dcb64463f88b64e83196f
+  size: 65439
+  hash: md5
+  path: name.clusters.txt
