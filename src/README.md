@@ -31,6 +31,6 @@
 │   │                                    Load and parse plot summery and char metadata.
 │   ├── movie_remakes_data.ipynb      <- Crawling the Remake Data
 │   └── tmdb_data.ipynb               <- Load TMDB data and add their WikidataID (QID)
-├── result_eda.ipynb                  <- Exploratory Data Analysis
-└── result_methods.ipynb              <- Our proof of concept methods
+├── results_eda.ipynb                 <- Exploratory Data Analysis
+└── results_methods.ipynb             <- Our proof of concept methods
 ```
