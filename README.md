@@ -74,16 +74,26 @@ Working with time data collected over a long period requires special attention b
 
 4. **Regression Analysis**: By using comprehensive regression models, we can examine the relationship between various factors and the likelihood of a movie being remade. This helps to uncover the key features that make certain movies more likely to be revisited.
 
-5. **Casual Analysis**: Methods like __Difference-in-Differences__ allows us to measure the causal effects of remaking a movie by comparing changes over time between remade films and their counterparts that were not remade. This approach is critical for isolating the impact of remakes.
+5. **Casual Analysis**: Methods like __Difference-in-Differences__ allow us to measure the causal effects of remaking a movie by comparing changes over time between remade films and their counterparts that were not remade. This approach is critical for isolating the impact of remakes.
 
-### Contextual and Sentiment Analysis
+### Sentiment Analysis Using Zero-shot Learning with LLMs
 
+6. **Appealing Contexts**: We will analyze the context and sentiment of the original and remade movies to identify whether they may have influenced the decision to remake the film.
 
+7. **Difference in Plots**: We will investigate the differences in the plot of the original and remade movies to identify any changes that may have been made to appeal to the new audiences. This analysis will help us understand how filmmakers adapt classic stories to resonate with contemporary viewers.
 
 ## Proposed Timeline
 
-
+1. Finishing Data Processing and Deal with Temporal Data: `22.11.2024`
+2. Regressing and Sentiment Analysis: `10.12.2024`
+3. Creating the Final Data Story Blog: `17.12.2024`
 
 ## Organization
 
-
+| Name    | T1 | T2 | T3 | T4 | T5 | T6 | T7 | Blog |
+|:-------:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|
+| Amir    | ✓  | ✗  | ✗  | ✓  | ✓  | ✗  | ✗  | ✗    |
+| Aryan   | ✗  | ✗  | ✓  | ✗  | ✓  | ✗  | ✓  | ✓    |
+| Maria   | ✗  | ✗  | ✗  | ✗  | ✗  | ✓  | ✓  | ✓    |
+| Matin   | ✗  | ✓  | ✗  | ✓  | ✗  | ✓  | ✗  | ✗    |
+| Yiğit   | ✓  | ✓  | ✓  | ✗  | ✗  | ✗  | ✗  | ✓    |
