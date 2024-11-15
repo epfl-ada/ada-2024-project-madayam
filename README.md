@@ -8,21 +8,31 @@
 
 The film industry has long been captivated by the allure of remaking classic movies, offering fresh takes on beloved stories to new generations. The motivation behind this project stems from a curiosity about the cyclical nature of storytelling in cinema and the industry's reliance on nostalgia. This project aims to delve deep into the phenomenon of movie remakes by analyzing films spanning decades to uncover patterns that explain why certain movies are chosen for remakes, their differences from their originals, and the factors contributing to their success or failure. By examining genre popularity, revenue, critical reception, and temporal gaps, we seek to tell the story of how and why the film industry reinvents existing narratives. This analysis will not only highlight the evolving tastes of audiences but also provide insights into the decisions made by filmmakers and studios. Perhaps as history repeats itself, so do pivotal movies of the generations.
 
-## Objectives
+## Research Objectives
 
-During our project, we would like to tackle the following questions: 
-1. What key features or metrics make an original movie more likely to be remade?
-2. Some movies have more than one movie remake. Is there anything different in those movies compared to other remakes?
-3. Do original movies and reboots have similar contexts (historical events)?
-4. Investigating the genre information for movie remakes.
-5. How diverse are the crews of the movie remakes compared to original ones?
-6. Do movie reboots have higher revenue than originals factoring the inflation? (Comparing the revenues of the remade films with the original ones and the whole movie dataset (adjusting with inflation))
-7. Investigating time intervals between the remakes, how long does it take to remake a movie?
-8. Applying sentiment analysis on movie plots with LLMs, does it affect a movie being remade, and is there a difference between the sentiment of a movie and its remake.
-9. Searching for social keywords in the plot and seeing whether it affects the remakes.
-10. Predicting future remakes and comparing them with LLM predictions / real data of future movies. Can we predict movie remakes and the time between the remakes?
-11. How popular are remakes compared to originals?
-12. What is the effect of multiple prominent movie stars present in the movie?
+We briefly outline the research questions that we aim to address in this project. We categorize our questions in three main categories as follows.
+
+### Patterns of Movie to be Remade
+
+What key features or metrics make an original movie more likely to be remade? Explicitly, we are interested in:
+
+1. Whether the genre of the movie, the time gap between the original and the remake, the popularity, revenue and the critical reception are contributing factors to the likelihood of a movie being remade.
+
+2. How these factors can contribute to a movie to be remade more than once.
+
+We can formalize this section as follows: "What is the difference of the distribution of the movie that are remade and the movies that are not remade?"
+
+### Differences between Original and Remake
+
+In this part, we are interested in comparing the original movie with its remakes. We are explicitly interested in:
+
+3. Comparing the ethnicity and popularity of the cast and the crew, the genre, the critical reception, and the revenue of the movie.
+
+4. The time gap between the original and the remake.
+
+5. The contextual drifts that may be in the remade version, which can be determined using LLMs.
+
+We can formalize this section as follows: "What is the joint/difference-of the distribution of the original movie and the remakes?"
 
 ## Datasets
 
