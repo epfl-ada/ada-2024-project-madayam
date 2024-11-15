@@ -56,11 +56,24 @@ Additionally, we identified and corrected noisy records in the CMU dataset by cr
 
 To map the Freebase code to the ethnicities, we get an API key through google cloud to access the Google Knowledge Graph to retrieve the ethnicity names and descriptions through their Freebase code.
 
-** MATIN AND AMIR S'IL VOUS PLAIT**
-
 ## Methods
-- Show that the method works well on a simple example
 
-## Proposed timeline
-## Organization within the team: A list of internal milestones up until project Milestone P3.
-## Questions for TAs (optional): Add here any questions you have for us related to the proposed project.
+To come up with a sound and reasonable story, we have to take several steps as described in this section.
+
+### Working with Temporal Data
+
+Working with time data collected over a long period requires special attention because the criteria change over time.
+
+1. **Accounting for Inflation**: We will adjust the revenue and budget values for inflation to ensure that the comparison is fair across different time periods. We can employ the Consumer Price Index (CPI) to adjust the values.
+
+2. **Demographic Drifts**: We will account for demographic shifts in the target audience by considering the population and changing the economical status of the audience.
+
+3. **Social Drifts**: The taste of a society may change over time and it has reflections on the scores people give to the movies and reviews of critics. We can take this into account by analyzing the temporal data of the movies.
+
+## Proposed Timeline
+
+
+
+## Organization
+
+
