@@ -1,0 +1,5 @@
+outs:
+- md5: 393e3b3721dc1bb131ac49b6d0a744ab
+  size: 57975
+  hash: md5
+  path: tvtropes.clusters.txt

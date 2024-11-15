@@ -1,0 +1,5 @@
+outs:
+- md5: 13f2107424b5e15e27b9065df90e0477
+  size: 41476849
+  hash: md5
+  path: character.metadata.tsv
