@@ -40,7 +40,7 @@ Our project focuses on the CMU Movie Summary Corpus, a dataset that includes inf
 
 ### Wikipedia Movie Remakes
 
-We extracted data from Wikipedia's "List of film remakes" pages (1, 2) and organized it into a tabular format. Afterward, to integrate the crawled data into the base CMU dataset, we retrieve the corresponding WikidataIDs for each movie using its URL.
+We extracted data from Wikipedia's "List of film remakes" pages ([1](https://en.wikipedia.org/wiki/List_of_film_remakes_(A%E2%80%93M)#A), [2](https://en.wikipedia.org/wiki/List_of_film_remakes_(N%E2%80%93Z)#Z)) and organized it into a tabular format. Afterward, to integrate the crawled data into the base CMU dataset, we retrieve the corresponding WikidataIDs for each movie using its URL.
 
 ### TMDB
 
