@@ -1,10 +1,14 @@
 # Can we Film that Again S'IL VOUS PLAIT? Unveiling Trends in Movie Remakes
 
+Here is some text before the image.
+
+| ![generated using GPT/DALL-E](cover_1.webp) |
+|:--:|
+| *Image generated using GPT/DALL-E* |
+
 <center>
-    <div style="text-align: center;">
-        <img src="cover_1.webp" alt="Image generated with GPT/DALL-E" style="width: 400px;"/>
-        <p style="font-style: italic; font-size: 8px;">Generated using GPT/DALL-E</p>
-    </div>
+  <img src="cover_1.webp" alt="generated using GPT/DALL-E" width="300">
+  <p><em>Image generated using GPT/DALL-E</em></p>
 </center>
 
 ## Abstract
