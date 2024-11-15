@@ -70,6 +70,14 @@ Working with time data collected over a long period requires special attention b
 
 3. **Social Drifts**: The taste of a society may change over time and it has reflections on the scores people give to the movies and reviews of critics. We can take this into account by analyzing the temporal data of the movies.
 
+### Regression Analysis
+
+
+
+### Contextual and Sentiment Analysis
+
+
+
 ## Proposed Timeline
 
 
