@@ -16,7 +16,7 @@
     cd ..;
     ```
 
-3. Download the Data
+3. Download the Data: All our processed data is stored in a Google Drive folder. You can download the data using the following command:
 
     ```bash
     gdown --folder https://drive.google.com/drive/folders/1NZD1CNek_Sim8oIJls__RSZOYkbCrre1
