@@ -1,33 +1,34 @@
 # Notebooks
 
+## Setting UP Environment
+
+1. Install the requirements
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2. Install our `config` package
+
+    ```bash
+    cd config;
+    pip install -e .
+    cd ..;
+    ```
+
+3. Download the Data
+
+    ```bash
+    gdown --folder https://drive.google.com/drive/folders/1NZD1CNek_Sim8oIJls__RSZOYkbCrre1
+    ```
+
 ## Structure
 
-```txt
+```bash
 .
 └── notebooks/
-    ├── cmu_data.ipynb
-    ├── movie_remakes_data.ipynb
-    ├── tmdb_data.ipynb
-    ├── merge_data.ipynb
-    └── eda.ipynb
+    └── data/
+        ├── cmu_data.ipynb                  <- Load CMU data and add their WikidataID (QID)
+        ├── movie_remakes_data.ipynb        <- Crawling the Remake Data
+        └── tmdb_data.ipynb                 <- Load TMDB data and add their WikidataID (QID)
 ```
-
-### CMU Data
-
-
-
-### Movie Remake Data
-
-
-
-### TMDB Data
-
-
-
-### Merging Data
-
-After cleaning the different modularoties of data we need, we merge them up and convert them to relational normal forms in notebook `merge_data.ipynb`.
-
-### Exploratory Data Analysis
-
-Finally, after acquiring all data we need, cleaned and tidy, we do a exploratory data analysis in notebook `eda.ipynb`.

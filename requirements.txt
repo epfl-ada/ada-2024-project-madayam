@@ -11,3 +11,4 @@ wikitools
 statsmodels
 openai
 google-api-python-client
+gdown
