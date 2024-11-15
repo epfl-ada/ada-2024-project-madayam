@@ -1,2 +1,7 @@
 /enrich_movie_data.csv
 /TMDB_movie_dataset_v12.csv
+/character.metadata.tsv
+/movie.metadata.tsv
+/name.clusters.txt
+/plot_summaries.txt
+/tvtropes.clusters.txt
