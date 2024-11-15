@@ -80,7 +80,11 @@ Working with time data collected over a long period requires special attention b
 
 6. **Appealing Contexts**: We will analyze the context and sentiment of the original and remade movies to identify whether they may have influenced the decision to remake the film.
 
-7. **Difference in Plots**: We will investigate the differences in the plot of the original and remade movies to identify any changes that may have been made to appeal to the new audiences. This analysis will help us understand how filmmakers adapt classic stories to resonate with contemporary viewers.
+7. **Difference in Plots**: We will investigate the differences in the plot of the original and remade movies to identify any changes to understand how filmmakers adapt stories to resonate with new viewers.
+
+### Recommendation
+
+8. **Prediction for Future**: Using the patterns we have identified, we can recommend which movies are worth to be remade and which are not. This can be a valuable insight for filmmakers and studios looking to capitalize on the trend of remakes.
 
 ## Proposed Timeline
 
@@ -90,10 +94,10 @@ Working with time data collected over a long period requires special attention b
 
 ## Organization
 
-| Name    | T1 | T2 | T3 | T4 | T5 | T6 | T7 | Blog |
-|:-------:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|
-| Amir    | ✓  | ✗  | ✗  | ✓  | ✓  | ✗  | ✗  | ✗    |
-| Aryan   | ✗  | ✗  | ✓  | ✗  | ✓  | ✗  | ✓  | ✓    |
-| Maria   | ✗  | ✗  | ✗  | ✗  | ✗  | ✓  | ✓  | ✓    |
-| Matin   | ✗  | ✓  | ✗  | ✓  | ✗  | ✓  | ✗  | ✗    |
-| Yiğit   | ✓  | ✓  | ✓  | ✗  | ✗  | ✗  | ✗  | ✓    |
+| Name    | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | Blog |
+|:-------:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|
+| Amir    | ✓  |    |    | ✓  | ✓  |    |    | ✓  |      |
+| Aryan   |    |    | ✓  |    | ✓  |    | ✓  |    | ✓    |
+| Maria   |    |    |    |    |    | ✓  | ✓  | ✓  | ✓    |
+| Matin   |    | ✓  |    | ✓  |    | ✓  |    |    |      |
+| Yiğit   | ✓  | ✓  | ✓  |    |    |    |    |    | ✓    |
