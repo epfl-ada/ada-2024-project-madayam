@@ -30,9 +30,9 @@ In this part, we are interested in comparing the original movie with its remakes
 
 4. The time gap between the original and the remake.
 
-5. The contextual similarities such as historical events that may co-occur with the original and remade version.
+5. The contextual similarities such as historical events may co-occur with the original and remade versions.
 
-To conclude, we can summarise this section as follows: "What is the joint/difference of the distribution of the original movie and the remakes?"
+To conclude, we can summarise this section as follows: "What is the joint/difference between the distribution of the original movie and the remakes?"
 
 ## Datasets
 
@@ -54,7 +54,7 @@ Additionally, we identified and corrected noisy records in the CMU dataset by cr
 
 ### Google Knowledge Graph
 
-To map the Freebase code to the ethnicities, we get an API key through google cloud to access the Google Knowledge Graph to retrieve the ethnicity names and descriptions through their Freebase code.
+To map the Freebase code to the ethnicities, we get an API key through Google Cloud to access the Google Knowledge Graph to retrieve the ethnicity names and descriptions through their Freebase code.
 
 ## Methods
 
@@ -66,13 +66,15 @@ Working with time data collected over a long period requires special attention b
 
 1. **Accounting for Inflation**: We will adjust the revenue and budget values for inflation to ensure that the comparison is fair across different time periods. We can employ the Consumer Price Index (CPI) to adjust the values.
 
-2. **Demographic Drifts**: We will account for demographic shifts in the target audience by considering the population and changing the economical status of the audience.
+2. **Demographic Drifts**: We will account for demographic shifts in the target audience by considering the population and changing the economic status of the audience.
 
 3. **Social Drifts**: The taste of a society may change over time and it has reflections on the scores people give to the movies and reviews of critics. We can take this into account by analyzing the temporal data of the movies.
 
 ### Regression Analysis
 
+4. **Regression Analysis**: By using comprehensive regression models, we can examine the relationship between various factors and the likelihood of a movie being remade. This helps to uncover the key features that make certain movies more likely to be revisited.
 
+5. **Casual Analysis**: Methods like __Difference-in-Differences__ allows us to measure the causal effects of remaking a movie by comparing changes over time between remade films and their counterparts that were not remade. This approach is critical for isolating the impact of remakes.
 
 ### Contextual and Sentiment Analysis
 
