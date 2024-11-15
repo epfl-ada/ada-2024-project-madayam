@@ -10,17 +10,17 @@ The film industry has long been captivated by the allure of remaking classic mov
 
 ## Research Objectives
 
-We briefly outline the research questions that we aim to address in this project. We categorize our questions in three main categories as follows.
+We briefly outline the research questions that we aim to address in this project. We categorize our questions into two main categories as follows.
 
 ### Patterns of Movie to be Remade
 
 What key features or metrics make an original movie more likely to be remade? Explicitly, we are interested in:
 
-1. Whether the genre of the movie, the time gap between the original and the remake, the popularity, revenue and the critical reception are contributing factors to the likelihood of a movie being remade.
+1. Whether the genre of the movie, the time gap between the original and the remake, the popularity, revenue, and critical reception are contributing factors to the likelihood of a movie being remade.
 
-2. How these factors can contribute to a movie to be remade more than once.
+2. How these factors can contribute to a movie being remade more than once?
 
-We can formalize this section as follows: "What is the difference of the distribution of the movie that are remade and the movies that are not remade?"
+We can formalize this section as follows: "What is the difference in the distribution of the movies that are remade and the movies that are not remade?"
 
 ### Differences between Original and Remake
 
@@ -30,9 +30,9 @@ In this part, we are interested in comparing the original movie with its remakes
 
 4. The time gap between the original and the remake.
 
-5. The contextual drifts that may be in the remade version, which can be determined using LLMs.
+5. The contextual drifts that may be in the remade version, can be determined using LLMs.
 
-We can formalize this section as follows: "What is the joint/difference-of the distribution of the original movie and the remakes?"
+We can formalize this section as follows: "What is the joint/difference of the distribution of the original movie and the remakes?"
 
 ## Datasets
 
