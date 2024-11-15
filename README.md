@@ -88,9 +88,9 @@ Working with time data collected over a long period requires special attention b
 
 ## Proposed Timeline
 
-[ ] Finishing Data Processing and Deal with Temporal Data: `22.11.2024`
-[ ] Regressing and Sentiment Analysis: `10.12.2024`
-[ ] Creating the Final Data Story Blog: `17.12.2024`
+- [ ] Finishing Data Processing and Deal with Temporal Data: `22.11.2024`
+- [ ] Regressing and Sentiment Analysis: `10.12.2024`
+- [ ] Creating the Final Data Story Blog: `17.12.2024`
 
 ## Organization
 
