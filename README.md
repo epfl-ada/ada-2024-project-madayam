@@ -7,7 +7,7 @@ The film industry has long been captivated by the allure of remaking classic mov
 
 The motivation behind this project stems from a curiosity about the cyclical nature of storytelling in cinema and the industry's reliance on nostalgia. By examining elements such as genre popularity, box office revenue, critical reception, and temporal gaps between originals and remakes, we seek to tell the story of how and why the film industry reinvents existing narratives. Perhaps as the history repeats itself, so do pivotal movies of the generations. This analysis will not only highlight the evolving tastes of audiences but also provide insights into the strategic decisions made by filmmakers and studios. Ultimately, we aim to offer a data-driven perspective on the impact of remakes in shaping cinematic trends and their role in the ever-changing landscape of entertainment.
 
-## Research Questions: A list of research questions you would like to address during the project.
+## Research Questions: A list of research questions you would like to address during the project.
 During our project, we would like to tackle the following questions: 
 1. What key features or metrics make an original movie more likely to be remade?
 2. Do original movies and reboots have similar contexts (historical events)?
