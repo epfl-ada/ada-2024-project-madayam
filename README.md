@@ -97,7 +97,7 @@ Working with time data collected over a long period requires special attention b
 | Name    | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | Blog |
 |:-------:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|
 | Amir    | ✓  |    |    | ✓  | ✓  |    |    | ✓  |      |
-| Aryan   |    |    | ✓  |    | ✓  |    | ✓  | ✓  | ✓    |
-| Maria   |    |    |    |    |    | ✓  | ✓  |    | ✓    |
+| Aryan   |    |    | ✓  |    | ✓  |    | ✓  |    | ✓    |
+| Maria   |    |    |    |    |    | ✓  | ✓  | ✓  | ✓    |
 | Matin   |    | ✓  |    | ✓  |    | ✓  |    |    |      |
 | Yiğit   | ✓  | ✓  | ✓  |    |    |    |    |    | ✓    |
