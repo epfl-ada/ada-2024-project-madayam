@@ -1,0 +1,5 @@
+outs:
+- md5: 99c27a2bc4ad692152d5a4fada629dfc
+  size: 1607753728
+  hash: md5
+  path: index_enwiki-20190420.db
