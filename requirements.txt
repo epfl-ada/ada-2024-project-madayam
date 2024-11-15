@@ -1,0 +1,13 @@
+pandas
+numpy
+matplotlib
+tqdm
+beautifulsoup4
+seaborn
+scipy
+statsmodels
+wikimapper
+wikitools
+statsmodels
+openai
+google-api-python-client
