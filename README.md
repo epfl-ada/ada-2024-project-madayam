@@ -54,10 +54,7 @@ Additionally, we identified and corrected noisy records in the CMU dataset by cr
 
 ### Google Knowledge Graph
 
-** MARIA S'IL VOUS PLAIT**
-
-and we utilize the Google Knowledge Graph to retrieve Freebase codes for ethnicities. 
-
+To map the Freebase code to the ethnicities, we get an API key through google cloud to access the Google Knowledge Graph to retrieve the ethnicity names and descriptions through their Freebase code.
 
 ** MATIN AND AMIR S'IL VOUS PLAIT**
 
