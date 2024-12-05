@@ -6,4 +6,5 @@ CONFIG = {
     'data_path': ROOT_PATH / 'ADAData',
     'cmu_path': ROOT_PATH / 'ADAData/CMU',
     'tmdb_path': ROOT_PATH / 'ADAData/TMDB',
+    'imdb_path': ROOT_PATH / 'ADAData/IMDB'
 }
