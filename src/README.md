@@ -29,6 +29,7 @@
 ├── notebooks/
 │   ├── cmu_data.ipynb                <- Load, parse, and clean CMU data and add their WikidataID (QID).
 │   │                                    Load and parse plot summery and char metadata.
+│   ├── imdb_data.ipynb               <- Load and merge separate IMDB datasets
 │   ├── movie_remakes_data.ipynb      <- Crawling the Remake Data
 │   └── tmdb_data.ipynb               <- Load TMDB data and add their WikidataID (QID)
 ├── result_eda.ipynb                  <- Exploratory Data Analysis
