@@ -87,8 +87,12 @@ def test_fit_dist_qplot(ages, x_label='Actor Age', y_label='Density', dist="norm
     ax[0].set_title(f'Fitted Log-Normal Distribution to {x_label} Data')
     ax[0].legend()
 
-    probplot(log_transformed_ages, dist="norm", plot=plt)
-    ax[1].set_title("Q-Q Plot of Log-Transformed Data")
+    if dist == "norm":
+        probplot(filtered_ages, dist="norm", plot=ax[1])
+        ax[1].set_title("Q-Q Plot of Normal Distribution")
+    elif dist == "lognorm":
+        probplot(log_transformed_ages, dist="norm", plot=ax[1])
+        ax[1].set_title("Q-Q Plot of Log-Transformed Data")
     ax[1].set_xlabel("Theoretical Quantiles")
     ax[1].set_ylabel("Sample Quantiles")
     ax[1].grid(True)
@@ -348,6 +352,70 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
     # Save to HTML
     pio.write_html(fig, file=output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive plot saved to {output_file}")
+
+    # Show the plot
+    fig.show()
+
+def plot_average_star_popularity(df_movies, df_remakes, df_originals, colors, output_file="average_star_popularity.html"):
+    """
+    Create interactive bar plots for the average star popularity across the top 3 stars 
+    for all movies, remakes, and originals datasets.
+
+    Parameters:
+        df_movies (pd.DataFrame): The dataset containing all movies.
+        df_remakes (pd.DataFrame): The dataset containing remakes.
+        df_originals (pd.DataFrame): The dataset containing originals.
+        colors (dict): Dictionary of colors for each dataset.
+        output_file (str): The filename to save the interactive plots as an HTML file.
+
+    Returns:
+        None. Saves the plots as an HTML file and displays them.
+    """
+    # Compute the average popularity across the top 3 stars
+    average_movies = (
+        df_movies[["star_1_popularity", "star_2_popularity", "star_3_popularity"]].mean().mean()
+    )
+    average_remakes = (
+        df_remakes[["star_1_popularity", "star_2_popularity", "star_3_popularity"]].mean().mean()
+    )
+    average_originals = (
+        df_originals[["star_1_popularity", "star_2_popularity", "star_3_popularity"]].mean().mean()
+    )
+
+    # Labels and values
+    datasets = ["All Movies", "Remakes", "Originals"]
+    averages = [average_movies, average_remakes, average_originals]
+
+    # Create a figure
+    fig = go.Figure()
+
+    # Bar plot for each dataset
+    for dataset, average, color in zip(datasets, averages, colors.values()):
+        fig.add_trace(go.Bar(
+            x=[dataset],
+            y=[average],
+            name=dataset,
+            marker=dict(color=color),
+            text=[f"{average:.2f}"],
+            textposition="outside"
+        ))
+
+    # Update layout
+    fig.update_layout(
+        title="Average Top-3 Star Popularity Across Datasets",
+        xaxis=dict(title="Dataset"),
+        yaxis=dict(title="Average Popularity"),
+        barmode="group",  # Group the bars side by side
+        legend=dict(title="Dataset"),
+        template="plotly_white",
+        autosize=True,
+        height=600,  # Adaptive height
+        width=800    # Adaptive width
+    )
+
+    # Save as HTML
+    fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
+    print(f"Interactive average star popularity plot saved to {output_file}")
 
     # Show the plot
     fig.show()

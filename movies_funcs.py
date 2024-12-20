@@ -68,7 +68,7 @@ def cleaning_genres(genres):
         genres = [genre.title() for genre in genres]
         return ", ".join(genres)
 
-###################################################### Budget Fitting ###########################################################
+###################################################### Budget and Revenue ###########################################################
 def fit_and_plot_distributions(data, column, title, distributions, with_log_transform=True, epsilon=1e-10):
     """
     Fit data to one or multiple distributions, calculate log-likelihood, AIC, and plot results.
@@ -150,6 +150,134 @@ def fit_and_plot_distributions(data, column, title, distributions, with_log_tran
     print(results_df)
     # return results_df
 
+def plot_log_difference_means(df_movies, df_remakes, df_originals, colors, title1="All movies", title2="Remakes", title3="Originals", output_file="log_difference_means.html"):
+    """
+    Create a bar plot of the mean of log(adjusted_revenue) - log(adjusted_budget) for each dataset.
+
+    Parameters:
+        df_movies (pd.DataFrame): The dataset containing all movies.
+        df_remakes (pd.DataFrame): The dataset containing remakes.
+        df_originals (pd.DataFrame): The dataset containing originals.
+        colors (dict): Dictionary of colors for each dataset.
+        output_file (str): The filename to save the interactive plot as an HTML file.
+
+    Returns:
+        None. Saves the plot as an HTML file and displays it.
+    """
+    # Calculate log differences for each dataset
+    df_movies["log_diff"] = np.log(df_movies["adjusted_revenue"]) - np.log(df_movies["adjusted_budget"])
+    df_remakes["log_diff"] = np.log(df_remakes["adjusted_revenue"]) - np.log(df_remakes["adjusted_budget"])
+    df_originals["log_diff"] = np.log(df_originals["adjusted_revenue"]) - np.log(df_originals["adjusted_budget"])
+
+    # Compute means
+    mean_movies = df_movies["log_diff"].mean()
+    mean_remakes = df_remakes["log_diff"].mean()
+    mean_originals = df_originals["log_diff"].mean()
+
+    # Dataset labels and means
+    datasets = [title1, title2, title3]
+    means = [mean_movies, mean_remakes, mean_originals]
+    dataset_colors = [colors[title1], colors[title2], colors[title3]]
+
+    # Create bar plot
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=datasets,
+        y=means,
+        marker=dict(color=dataset_colors),
+        text=[f"{val:.2f}" for val in means],
+        textposition="outside",
+        name="Mean Log Difference"
+    ))
+
+    # Update layout
+    fig.update_layout(
+        title="Mean Log(Revenue) - Log(Budget) Across Datasets",
+        xaxis=dict(title="Dataset"),
+        yaxis=dict(title="Mean Log Difference"),
+        template="plotly_white",
+        autosize=True,
+        height=600,
+        width=800
+    )
+
+    # Save as HTML
+    fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
+    print(f"Interactive plot saved to {output_file}")
+
+    # Show the plot
+    fig.show()
+
+def plot_log_revenue_budget_histograms(df_movies, df_remakes, df_originals, colors, output_file="log_revenue_budget_histograms.html"):
+    """
+    Create interactive histograms of log(adjusted_revenue) - log(adjusted_budget) for each dataset.
+
+    Parameters:
+        df_movies (pd.DataFrame): The dataset containing all movies.
+        df_remakes (pd.DataFrame): The dataset containing remakes.
+        df_originals (pd.DataFrame): The dataset containing originals.
+        colors (dict): Dictionary of colors for each dataset.
+        output_file (str): The filename to save the interactive plots as an HTML file.
+
+    Returns:
+        None. Saves the plots as an HTML file and displays them.
+    """
+    # Compute log differences for each dataset
+    def compute_log_difference(df):
+        return np.log(df["adjusted_revenue"]) - np.log(df["adjusted_budget"])
+
+    df_movies["log_diff"] = compute_log_difference(df_movies)
+    df_remakes["log_diff"] = compute_log_difference(df_remakes)
+    df_originals["log_diff"] = compute_log_difference(df_originals)
+
+    # Create a figure
+    fig = go.Figure()
+
+    # Add histograms for each dataset
+    fig.add_trace(go.Histogram(
+        x=df_movies["log_diff"].dropna(),
+        name="All Movies",
+        marker=dict(color=colors['whole_dataset']),
+        opacity=0.7,
+        histnorm="percent"
+    ))
+
+    fig.add_trace(go.Histogram(
+        x=df_remakes["log_diff"].dropna(),
+        name="Remakes",
+        marker=dict(color=colors['remakes']),
+        opacity=0.7,
+        histnorm="percent"
+    ))
+
+    fig.add_trace(go.Histogram(
+        x=df_originals["log_diff"].dropna(),
+        name="Originals",
+        marker=dict(color=colors['originals']),
+        opacity=0.7,
+        histnorm="percent"
+    ))
+
+    # Update layout
+    fig.update_layout(
+        title="Scale of difference between revenue and budget for datasets",
+        xaxis=dict(title="scaled difference (log(revenue) - log(budget))"),
+        yaxis=dict(title="Percentage (%)"),
+        barmode="overlay",  # Overlay the histograms
+        legend=dict(title="Dataset"),
+        template="plotly_white",
+        autosize=True,
+        height=600,  # Adaptive height
+        width=800    # Adaptive width
+    )
+
+    # Save as HTML
+    fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
+    print(f"Interactive histograms saved to {output_file}")
+
+    # Show the plot
+    fig.show()
 ################################################## Statistics across years ####################################################
 def plot_histogram(df, column_name, bins, title, ax):
     # Extract and clean the data
@@ -488,7 +616,7 @@ def plot_genre_trends_by_decade(df, dataset_title, top_n_genres=10, min_year=190
     plt.tight_layout()
     plt.show()
 
-def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_file="heatmap.html"):
+def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_file="heatmap.html", color_scale="purples"):
     """
     Generate heatmaps for genre relationships between originals and remakes.
 
@@ -591,7 +719,7 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
         labels=dict(x="Remake Genres", y="Original Genres", color=plot_type.replace("_", " ").title()),
         x=heatmap_data.columns,
         y=heatmap_data.index,
-        color_continuous_scale="rdbu",  # color_scale,
+        color_continuous_scale=color_scale,  # color_scale,
         title=title
     )
 
@@ -600,7 +728,7 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
     showlegend=False,
     autosize=True,
     template="plotly_white",
-    height=800,
+    height=600,
     width=800
     )
 
@@ -838,7 +966,7 @@ def plot_normalized_sentiment_analysis(df_movies, df_remakes, df_originals, colo
         template="plotly_white",
         autosize=True,
         height=600,  # Adaptive height
-        width=1000   # Adaptive width
+        width=800   # Adaptive width
     )
 
     # Save as HTML
