@@ -13,3 +13,4 @@ openai
 google-api-python-client
 gdown
 plotly
+datawig
