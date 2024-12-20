@@ -115,14 +115,11 @@ def preprocess_populairty_crew(df):
     df_popularity_crew = df_popularity_crew.dropna(subset=["star_1_popularity", "star_2_popularity", "star_3_popularity", "Director_popularity", "Writer_popularity", "Producer_popularity"])
     df_popularity_crew[["star_1_popularity", "star_2_popularity", "star_3_popularity", "star_4_popularity", "star_5_popularity", "Director_popularity", "Writer_popularity", "Producer_popularity"]].describe()
 
-    # Columns to scale
     columns = ["star_1_popularity", "star_2_popularity", "star_3_popularity", "star_4_popularity", "star_5_popularity", "Director_popularity", "Writer_popularity", "Producer_popularity"]
 
-    # Apply Min-Max Scaling
     scaler = MinMaxScaler()
     df_popularity_crew[columns] = scaler.fit_transform(df_popularity_crew[columns])
 
-    # Calculate total popularity
     df_popularity_crew.loc[:,'total_popularity'] = df_popularity_crew[columns].sum(axis=1)
     df_popularity_crew.loc[:,'cast_popularity'] = df_popularity_crew[["star_1_popularity", "star_2_popularity", "star_3_popularity", "star_4_popularity", "star_5_popularity"]].sum(axis=1)
     
@@ -136,7 +133,6 @@ def plot_popularity_crew(df_popularity_crew_remakes, df_popularity_crew_original
     ax.vlines(df_popularity_crew_originals[column].mean(), 0, 2, color='red', linestyle='--', label=f'Mean Originals {column.replace("_", " ")}')
     sns.kdeplot(df_popularity_crew_rest[column], label=f'Rest {column.replace("_", " ")}', color='green', fill=True, ax=ax)
     ax.vlines(df_popularity_crew_rest[column].mean(), 0, 2, color='green', linestyle='--', label=f'Mean Rest {column.replace("_", " ")}')
-    # sns.kdeplot(df_popularity_crew['total_popularity'], label='Whole Dataset', color='purple', fill=True, ax=ax)
     plt.legend()
     plt.tight_layout()
     plt.show()
@@ -152,15 +148,13 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
         column (str): The column to visualize (default is 'total_popularity').
         output_file (str): Output HTML file for saving the plot.
     """
-    # Define color scheme
     colors = {
-        'whole_dataset': '#636EFA',  # Blue
-        'remakes': '#EF553B',        # Red
-        'originals': '#00CC96',      # Green
-        'rest': '#AB63FA'           # Purple
+        'whole_dataset': '#636EFA',
+        'remakes': '#EF553B',
+        'originals': '#00CC96',
+        'rest': '#AB63FA'
     }
 
-    # Generate KDE data
     def kde_smooth_data(series, num_points=500):
         data = series.dropna()
         kde = gaussian_kde(data)
@@ -168,15 +162,12 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
         y_vals = kde(x_vals)
         return x_vals, y_vals
 
-    # Generate smoothed data for each dataset
     x_remakes, y_remakes = kde_smooth_data(df_popularity_crew_remakes[column])
     x_originals, y_originals = kde_smooth_data(df_popularity_crew_originals[column])
     x_rest, y_rest = kde_smooth_data(df_popularity_crew_rest[column])
 
-    # Create traces for each dataset
     fig = go.Figure()
 
-    # Remakes
     fig.add_trace(go.Scatter(
         x=x_remakes, y=y_remakes,
         mode='lines',
@@ -191,7 +182,6 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
         marker=dict(color=colors['remakes'], symbol='x', size=10)
     ))
 
-    # Originals
     fig.add_trace(go.Scatter(
         x=x_originals, y=y_originals,
         mode='lines',
@@ -206,7 +196,6 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
         marker=dict(color=colors['originals'], symbol='x', size=10)
     ))
 
-    # Rest
     fig.add_trace(go.Scatter(
         x=x_rest, y=y_rest,
         mode='lines',
@@ -221,7 +210,6 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
         marker=dict(color=colors['rest'], symbol='x', size=10)
     ))
 
-    # Update layout
     fig.update_layout(
         title=f"Popularity Analysis of {column.replace('_', ' ')}",
         xaxis_title=column.replace("_", " "),
@@ -233,7 +221,6 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
         legend_title="Legend"
     )
 
-    # Save and display the plot
     fig.write_html(output_file, include_plotlyjs="cdn", auto_open=True)
     print(f"Plot saved to {output_file}")
     fig.show()
@@ -256,19 +243,16 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
     Returns:
         None. Displays the plot and saves it to an HTML file.
     """
-    # Compute histograms
     counts_whole, edges_whole = np.histogram(df_movies[column_name].dropna(), bins=bins)
     counts_remakes, edges_remakes = np.histogram(df_remakes[column_name].dropna(), bins=bins)
     counts_originals, edges_originals = np.histogram(df_originals[column_name].dropna(), bins=bins)
     counts_rest, edges_rest = np.histogram(df_rest[column_name].dropna(), bins=bins)
 
-    # Compute bin centers
     bin_centers_whole = (edges_whole[:-1] + edges_whole[1:]) / 2
     bin_centers_remakes = (edges_remakes[:-1] + edges_remakes[1:]) / 2
     bin_centers_originals = (edges_originals[:-1] + edges_originals[1:]) / 2
     bin_centers_rest = (edges_rest[:-1] + edges_rest[1:]) / 2
 
-    # Filter zero-count bins for plotting and scaling
     def filter_nonzero(counts, bin_centers):
         mask = counts > 0
         return counts[mask], bin_centers[mask]
@@ -278,7 +262,6 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
     counts_originals, bin_centers_originals = filter_nonzero(counts_originals, bin_centers_originals)
     counts_rest, bin_centers_rest = filter_nonzero(counts_rest, bin_centers_rest)
 
-    # Min-Max Scaling
     def min_max_scale(arr):
         return (arr - arr.min()) / (arr.max() - arr.min()) if arr.max() != arr.min() else arr
 
@@ -287,15 +270,6 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
     scaled_counts_originals = min_max_scale(counts_originals)
     scaled_counts_rest = min_max_scale(counts_rest)
 
-    # Define colors for each dataset
-    # colors = {
-    #     "whole_dataset": "#636EFA",  # Blue
-    #     "remakes": "#EF553B",        # Red
-    #     "originals": "#00CC96",      # Green
-    #     "rest": "#AB63FA"           # Purple
-    # }
-
-    # Create traces for each dataset
     traces = [
         go.Scatter(
             x=bin_centers_whole,
@@ -331,10 +305,8 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
         )
     ]
 
-    # Create the figure
     fig = go.Figure(data=traces)
 
-    # Update layout
     fig.update_layout(
         title=f"Log of Min-Max Scaled Counts of Different {column_name.replace('_', ' ')} Scores",
         xaxis=dict(
@@ -349,11 +321,9 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
         width=800
     )
 
-    # Save to HTML
     pio.write_html(fig, file=output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive plot saved to {output_file}")
 
-    # Show the plot
     fig.show()
 
 def plot_average_star_popularity(df_movies, df_remakes, df_originals, colors, output_file="average_star_popularity.html"):
@@ -371,7 +341,6 @@ def plot_average_star_popularity(df_movies, df_remakes, df_originals, colors, ou
     Returns:
         None. Saves the plots as an HTML file and displays them.
     """
-    # Compute the average popularity across the top 3 stars
     average_movies = (
         df_movies[["star_1_popularity", "star_2_popularity", "star_3_popularity"]].mean().mean()
     )
@@ -382,14 +351,11 @@ def plot_average_star_popularity(df_movies, df_remakes, df_originals, colors, ou
         df_originals[["star_1_popularity", "star_2_popularity", "star_3_popularity"]].mean().mean()
     )
 
-    # Labels and values
     datasets = ["All Movies", "Remakes", "Originals"]
     averages = [average_movies, average_remakes, average_originals]
 
-    # Create a figure
     fig = go.Figure()
 
-    # Bar plot for each dataset
     for dataset, average, color in zip(datasets, averages, colors.values()):
         fig.add_trace(go.Bar(
             x=[dataset],
@@ -400,22 +366,19 @@ def plot_average_star_popularity(df_movies, df_remakes, df_originals, colors, ou
             textposition="outside"
         ))
 
-    # Update layout
     fig.update_layout(
         title="Average Top-3 Star Popularity Across Datasets",
         xaxis=dict(title="Dataset"),
         yaxis=dict(title="Average Popularity"),
-        barmode="group",  # Group the bars side by side
+        barmode="group",
         legend=dict(title="Dataset"),
         template="plotly_white",
         autosize=True,
-        height=600,  # Adaptive height
-        width=800    # Adaptive width
+        height=600,
+        width=800
     )
 
-    # Save as HTML
     fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive average star popularity plot saved to {output_file}")
 
-    # Show the plot
     fig.show()
