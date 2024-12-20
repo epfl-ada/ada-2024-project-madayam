@@ -285,7 +285,7 @@ def fit_yearly_distribution_plotly(df, column_name, title):
     fig.add_trace(go.Bar(
         x=bin_centers,
         y=counts,
-        name="Filtered Histogram",
+        name="Histogram",
         opacity=0.5,
         marker=dict(color="blue"),
     ))
@@ -295,7 +295,7 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         x=nonzero_bin_centers,
         y=nonzero_counts,
         mode="markers",
-        name="Filtered Data (log-log)",
+        name="Data (log-log)",
         marker=dict(color="orange", size=8),
     ))
 
@@ -304,7 +304,7 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         x=fitted_bin_centers,
         y=fitted_counts,
         mode="lines",
-        name=f"Power-Law Fit (slope={slope:.2f})",
+        name=f"Power-Law Fit (slope={slope:.2f}) for {title}",
         line=dict(color="red", dash="solid"),
     ))
 

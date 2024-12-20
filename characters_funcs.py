@@ -235,7 +235,7 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
     fig.show()
 
 
-def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_rest, column_name, colors, bins=None, is_log=False, output_file="people_perception.html"):
+def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_rest, column_name, colors, bins=None, is_log=False, output_file="vote_averages.html"):
     """
     Create an interactive plot to visualize scaled counts of a column across multiple datasets.
 
@@ -334,7 +334,7 @@ def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_r
     fig.update_layout(
         title=f"Log of Min-Max Scaled Counts of Different {column_name.replace('_', ' ')} Scores",
         xaxis=dict(
-            title=f"{column_name.replace('_', ' ')} Scores (Log Scale)" if is_log else f"{column_name.replace('_', ' ')} Scores",
+            title=f"{column_name.replace('_', ' ')} scores" if is_log else f"{column_name.replace('_', ' ')} scores",
             type="log" if is_log else "linear"
         ),
         yaxis=dict(title="Scaled Counts (0-1)"),
