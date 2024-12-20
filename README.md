@@ -4,7 +4,7 @@
 |:--:|
 | *generated using DALL-E* |
 
-Proceed to [this](./src/README.md) for details of running the code.
+Proceed to the [data story](https://movies-remakes.github.io) for the results.
 
 ## Abstract
 
@@ -60,46 +60,12 @@ To map the Freebase code to the ethnicities, we get an API key through Google Cl
 
 ## Methods
 
-To come up with a sound and reasonable story, we have to take several steps as described in this section.
+The methods used for this analysis to be done is including, but not limitied to, data gathering from different sources, and enriching the final data using various sources precisely, advanced feature engineering such as adjusting inflation and extracting meaningful features to account for drifts, extracting sentiments and casts informations as features, implementing advanced casual analysis and statistical regression methods such as propensity score matching to extract the underlying patterns. As mentioned before all of these methods are intended to answer to two research questions, RQ1: What is the difference of movies which are being remade and those which are not, and RQ2: What is the difference of a remake movie with its original reference. We have used these methods where-ever they are applicable.
 
-### Working with Temporal Data
+## Contribution of Team Members
 
-Working with time data collected over a long period requires special attention because the criteria change over time.
-
-1. **Accounting for Inflation**: We will adjust the revenue and budget values for inflation to ensure that the comparison is fair across different time periods. We can employ the Consumer Price Index (CPI) to adjust the values.
-
-2. **Demographic Drifts**: We will account for demographic shifts in the target audience by considering the population and changing the economic status of the audience.
-
-3. **Social Drifts**: The taste of a society may change over time and it has reflections on the scores people give to the movies and reviews of critics. We can take this into account by analyzing the temporal data of the movies.
-
-### Regression Analysis
-
-4. **Regression Analysis**: By using comprehensive regression models, we can examine the relationship between various factors and the likelihood of a movie being remade. This helps to uncover the key features that make certain movies more likely to be revisited.
-
-5. **Casual Analysis**: Methods like __Difference-in-Differences__ allow us to measure the causal effects of remaking a movie by comparing changes over time between remade films and their counterparts that were not remade. This approach is critical for isolating the impact of remakes.
-
-### Sentiment Analysis Using Zero-shot Learning with LLMs
-
-6. **Appealing Contexts**: We will analyze the context and sentiment of the original and remade movies to identify whether they may have influenced the decision to remake the film.
-
-7. **Difference in Plots**: We will investigate the differences in the plot of the original and remade movies to identify any changes to understand how filmmakers adapt stories to resonate with new viewers.
-
-### Recommendation
-
-8. **Prediction for Future**: Using the patterns we have identified, we can recommend which movies are worth to be remade and which are not. This can be a valuable insight for filmmakers and studios looking to capitalize on the trend of remakes.
-
-## Proposed Timeline
-
-- [ ] Finishing Data Processing and Deal with Temporal Data: `22.11.2024`
-- [ ] Regressing and Sentiment Analysis: `10.12.2024`
-- [ ] Creating the Final Data Story Blog: `17.12.2024`
-
-## Organization
-
-| Name    | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | Blog |
-|:-------:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:----:|
-| Amir    | ✓  |    |    | ✓  | ✓  |    |    | ✓  |      |
-| Aryan   |    |    | ✓  |    | ✓  |    | ✓  |    | ✓    |
-| Maria   |    |    |    |    |    | ✓  | ✓  | ✓  | ✓    |
-| Matin   |    | ✓  |    | ✓  |    | ✓  |    |    |      |
-| Yiğit   | ✓  | ✓  | ✓  |    |    |    |    |    | ✓    |
+Aryan: Gathering and Merging the Data of Remakes, Forming the Ideas, Work toward Casual Analysis and Matchings Algorithms, Visualization, Create GitHub Page, Story Telling Over Data.
+Amirmahdi: Analysing, Visualizing, and Implementing Statistical and Regression Methods to Examine the Difference of Original vs. Remakes.
+Main: Analysing, Visualizing, and Implementing Statistical and Regression Methods to Examine the Difference of Remade vs. Non Remades.
+Maria: Analysing, Visualizing, and Fitting Distributions for EDA on the Data, Sentiment Analysis on the Data.
+Yigit: Enrichment and Cleaning of TMDB/IMDB Data.
