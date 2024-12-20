@@ -18,6 +18,13 @@ np.random.seed(42)
 
 
 def plot_significance_plotly_regression_all(model, path_to_save, title='Coefficients and Confidence Intervals'):
+    """
+    Plot the significance of the coefficients of the model.
+    :param model: regression model
+    :param path_to_save:
+    :param title: plot title
+    :return: DataFrame of coefficients and confidence intervals
+    """
     coefficients = model.params
     conf_intervals = model.conf_int()
     conf_intervals.columns = ['lower', 'upper']
@@ -101,6 +108,12 @@ def plot_significance_plotly_regression_all(model, path_to_save, title='Coeffici
 
 
 def regress(df, has_remake=True):
+    """
+    Perform a logistic regression on the whole data on being a remake or having a remake.
+    :param df: the whole data
+    :param has_remake: indicates whether the regression is on having a remake or being a remake. If true, the regression is on having a remake.
+    :return: the regression model
+    """
 
     if has_remake:
         col_keep = 'has_remake'
@@ -128,6 +141,14 @@ def regress(df, has_remake=True):
 
 
 def plot_ate_or_histograms(results, output_file="ate_or_histograms.html", has_remake=True):
+    """
+    Plot the ATE and OR histograms.
+    :param results: dictionary of results for each column
+    :param output_file: output file path
+    :param has_remake: indicates whether the regression is on having a remake or being a remake. If true, the regression is on having a remake.
+    :return:
+    """
+
 
     columns = list(results.keys())
     try:
@@ -227,6 +248,12 @@ def plot_ate_or_histograms(results, output_file="ate_or_histograms.html", has_re
 
 
 def check_each_col_treat(df, has_remake=True):
+    """
+    Check the treatment effect of each column by calculating the propensity score and matching.
+    :param df:
+    :param has_remake:
+    :return: Dictionary of results for each column containing ATE, OR, and ATE standard error.
+    """
     if has_remake:
         col_keep = 'has_remake'
         col_remove = 'is_remake'
