@@ -64,8 +64,8 @@ The methods used for this analysis to be done is including, but not limitied to,
 
 ## Contribution of Team Members
 
-Aryan: Gathering and Merging the Data of Remakes, Forming the Ideas, Work toward Casual Analysis and Matchings Algorithms, Visualization, Create GitHub Page, Story Telling Over Data.
-Amirmahdi: Analysing, Visualizing, and Implementing Statistical and Regression Methods to Examine the Difference of Original vs. Remakes.
-Main: Analysing, Visualizing, and Implementing Statistical and Regression Methods to Examine the Difference of Remade vs. Non Remades.
-Maria: Analysing, Visualizing, and Fitting Distributions for EDA on the Data, Sentiment Analysis on the Data.
-Yigit: Enrichment and Cleaning of TMDB/IMDB Data.
+- Aryan: Gathering and Merging the Data of Remakes, Forming the Ideas, Work toward Casual Analysis and Matchings Algorithms, Visualization, Create GitHub Page, Story Telling Over Data.
+- Amirmahdi: Analysing, Visualizing, and Implementing Statistical and Regression Methods to Examine the Difference of Original vs. Remakes.
+- Main: Analysing, Visualizing, and Implementing Statistical and Regression Methods to Examine the Difference of Remade vs. Non Remades.
+- Maria: Analysing, Visualizing, and Fitting Distributions for EDA on the Data, Sentiment Analysis on the Data.
+- Yigit: Enrichment and Cleaning of TMDB/IMDB Data.
