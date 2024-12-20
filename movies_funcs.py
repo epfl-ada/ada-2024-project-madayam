@@ -31,25 +31,21 @@ def plot_boxplot(df, column_name, title, ax):
     ax.set_yticks([])
     ax.set_title(title)
     
-    # Print summary statistics for this dataset
     stats = movie_years_only.aggregate(["mean", "median", "std"])
     print(f"Statistics for {title}:")
     print(stats)
     print("="*50)
 
 def plot_boxplot_with_upperbound(df, column_name, title, upper_bound, ax):
-    # Filter runtime by upper_bound
     filtered_data = df[df[column_name] < upper_bound][column_name].dropna()
 
-    # Plot the boxplot on the provided Axes
     ax.boxplot(filtered_data, vert=False)
     ax.set_yticks([])
     ax.set_title(title + f" (UB={upper_bound})")
 
-    # Compute and print statistics for upper_bound/2 subset
     half_ub_filtered = df[df[column_name] < upper_bound][column_name].dropna()
     first_quartile = half_ub_filtered.quantile(0.25)
-    third_quartile = half_ub_filtered.quantile(0.75)  # Typically Q3 is quantile(0.75), not 0.5
+    third_quartile = half_ub_filtered.quantile(0.75) 
     stats = half_ub_filtered.aggregate(["mean", "median", "std", "min", "max"])
 
     print(f"Statistics for {title} (UB={upper_bound}):")
@@ -79,7 +75,6 @@ def fit_and_plot_distributions(data, column, title, distributions, with_log_tran
     - title (str): Title for the plot.
     - distributions (list or single): Distribution(s) to fit the data. Accepts single or list of scipy.stats distributions.
     """
-    # Ensure distributions is a list
     if not isinstance(distributions, list):
         distributions = [distributions]
     
@@ -92,17 +87,13 @@ def fit_and_plot_distributions(data, column, title, distributions, with_log_tran
         data_filtered = data[column].dropna()
         data_filtered = data_filtered[data_filtered > 0]
 
-    # Plot histogram as a probability distribution
     bin_heights, bin_edges = np.histogram(data_filtered, bins=30, density=True)
-    bin_width = bin_edges[1] - bin_edges[0]  # Bin width for scaling
+    bin_width = bin_edges[1] - bin_edges[0] 
 
-    # Generate x values for PDFs
     x = np.linspace(data_filtered.min(), data_filtered.max(), 1000)
 
-    # Initialize results dictionary
     results = []
 
-    # Fit each distribution, calculate PDF, log-likelihood, and AIC
     plt.figure(figsize=(10, 6))
     plt.bar(bin_edges[:-1], bin_heights, width=bin_width, alpha=0.5, color="gray", label="Data Histogram")
     
@@ -117,23 +108,17 @@ def fit_and_plot_distributions(data, column, title, distributions, with_log_tran
         else:
             params = dist.fit(data_filtered)
 
-        # Calculate the PDF
         pdf = dist.pdf(x, *params)
-
-        # Calculate the log-likelihood
         log_likelihood = np.sum(dist.logpdf(data_filtered, *params))
 
         # Calculate the AIC
-        k = len(params)  # Number of parameters
+        k = len(params)
         aic = 2 * k - 2 * log_likelihood
 
-        # Store results
         results.append({"Distribution": dist.name, "Log Likelihood": log_likelihood, "AIC": aic})
 
-        # Plot the PDF
         plt.plot(x, pdf, label=f"{dist.name} Fit")
 
-    # Finalize plot
     plt.title(f"Fitted Distributions for {title}")
     if with_log_transform:
         plt.xlabel(f"Log-transformed {column}")
@@ -144,11 +129,9 @@ def fit_and_plot_distributions(data, column, title, distributions, with_log_tran
     plt.grid(alpha=0.3)
     plt.show()
 
-    # Display results as a table
     results_df = pd.DataFrame(results).sort_values(by="AIC")
     print("Fitting Results:")
     print(results_df)
-    # return results_df
 
 def plot_log_difference_means(df_movies, df_remakes, df_originals, colors, title1="All movies", title2="Remakes", title3="Originals", output_file="log_difference_means.html"):
     """
@@ -164,22 +147,18 @@ def plot_log_difference_means(df_movies, df_remakes, df_originals, colors, title
     Returns:
         None. Saves the plot as an HTML file and displays it.
     """
-    # Calculate log differences for each dataset
     df_movies["log_diff"] = np.log(df_movies["adjusted_revenue"]) - np.log(df_movies["adjusted_budget"])
     df_remakes["log_diff"] = np.log(df_remakes["adjusted_revenue"]) - np.log(df_remakes["adjusted_budget"])
     df_originals["log_diff"] = np.log(df_originals["adjusted_revenue"]) - np.log(df_originals["adjusted_budget"])
 
-    # Compute means
     mean_movies = df_movies["log_diff"].mean()
     mean_remakes = df_remakes["log_diff"].mean()
     mean_originals = df_originals["log_diff"].mean()
 
-    # Dataset labels and means
     datasets = [title1, title2, title3]
     means = [mean_movies, mean_remakes, mean_originals]
     dataset_colors = [colors[title1], colors[title2], colors[title3]]
 
-    # Create bar plot
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
@@ -191,7 +170,6 @@ def plot_log_difference_means(df_movies, df_remakes, df_originals, colors, title
         name="Mean Log Difference"
     ))
 
-    # Update layout
     fig.update_layout(
         title="Mean Log(Revenue) - Log(Budget) Across Datasets",
         xaxis=dict(title="Dataset"),
@@ -201,12 +179,9 @@ def plot_log_difference_means(df_movies, df_remakes, df_originals, colors, title
         height=600,
         width=800
     )
-
-    # Save as HTML
     fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive plot saved to {output_file}")
 
-    # Show the plot
     fig.show()
 
 def plot_log_revenue_budget_histograms(df_movies, df_remakes, df_originals, colors, output_file="log_revenue_budget_histograms.html"):
@@ -223,7 +198,6 @@ def plot_log_revenue_budget_histograms(df_movies, df_remakes, df_originals, colo
     Returns:
         None. Saves the plots as an HTML file and displays them.
     """
-    # Compute log differences for each dataset
     def compute_log_difference(df):
         return np.log(df["adjusted_revenue"]) - np.log(df["adjusted_budget"])
 
@@ -231,10 +205,8 @@ def plot_log_revenue_budget_histograms(df_movies, df_remakes, df_originals, colo
     df_remakes["log_diff"] = compute_log_difference(df_remakes)
     df_originals["log_diff"] = compute_log_difference(df_originals)
 
-    # Create a figure
     fig = go.Figure()
 
-    # Add histograms for each dataset
     fig.add_trace(go.Histogram(
         x=df_movies["log_diff"].dropna(),
         name="All Movies",
@@ -259,7 +231,6 @@ def plot_log_revenue_budget_histograms(df_movies, df_remakes, df_originals, colo
         histnorm="percent"
     ))
 
-    # Update layout
     fig.update_layout(
         title="Scale of difference between revenue and budget for datasets",
         xaxis=dict(title="scaled difference (log(revenue) - log(budget))"),
@@ -268,22 +239,18 @@ def plot_log_revenue_budget_histograms(df_movies, df_remakes, df_originals, colo
         legend=dict(title="Dataset"),
         template="plotly_white",
         autosize=True,
-        height=600,  # Adaptive height
-        width=800    # Adaptive width
+        height=600,  
+        width=800    
     )
 
-    # Save as HTML
     fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive histograms saved to {output_file}")
 
-    # Show the plot
     fig.show()
 ################################################## Statistics across years ####################################################
 def plot_histogram(df, column_name, bins, title, ax):
-    # Extract and clean the data
     movie_years_only = df[column_name].dropna().astype(int)
     
-    # Plot on the provided Axes
     ax.hist(movie_years_only, bins=bins, alpha=0.5)
     ax.set_xlabel("Movie year")
     ax.set_ylabel(f"Number of {title}")
@@ -305,15 +272,12 @@ def fit_yearly_distribution(df, column_name, title, ax):
     nonzero_counts = counts[nonzero_mask]
     nonzero_bin_centers = bin_centers[nonzero_mask]
 
-    # Log-transform
     log_bin_centers = np.log10(nonzero_bin_centers)
     log_counts = np.log10(nonzero_counts)
 
-    # Perform linear regression on the log-log data
     slope, intercept, r_value, p_value, std_err = linregress(log_bin_centers, log_counts)
     fitted_line = slope * log_bin_centers + intercept
 
-    # Plotting
     ax.hist(filtered_years, bins=30, range=(1900, 2020), alpha=0.5, log=True, label='Filtered Histogram')
     ax.plot(nonzero_bin_centers, nonzero_counts, 'o', label='Filtered Data (log-log)')
     ax.plot(10**log_bin_centers, 10**fitted_line, 'r-', label=f'Power-Law Fit (slope={slope:.2f})')
@@ -325,13 +289,12 @@ def fit_yearly_distribution(df, column_name, title, ax):
     ax.legend()
     ax.grid(True, which='both', linestyle='--', linewidth=0.5)
 
-    # Print out regression results
     print(f"Results for {title}")
     print(f"Slope: {slope:.2f}")
     print(f"Intercept: {intercept:.2f}")
     print(f"R-squared: {r_value**2:.2f}")
 
-    # Construct theoretical distribution for years 1900-2019
+    # theoretical distribution for years 1900-2019
     year_range = np.arange(1900, 2020)
     theoretical_counts = 10**(intercept) * (year_range**slope)
     total = np.sum(theoretical_counts)
@@ -339,9 +302,7 @@ def fit_yearly_distribution(df, column_name, title, ax):
     theoretical_cdf = np.cumsum(theoretical_pmf)
 
     def power_law_cdf(x):
-        # Ensure x is an array
         x = np.asarray(x)
-        # Initialize array of results
         cdf_values = np.zeros_like(x, dtype=float)
 
         # x < 1900 => CDF = 0
@@ -354,9 +315,9 @@ def fit_yearly_distribution(df, column_name, title, ax):
 
         # For values between 1900 and 2019
         mask_middle = (~mask_less) & (~mask_greater)
-        # Compute the index
+  
         indices = np.floor(x[mask_middle]).astype(int) - 1900
-        # Ensure indices are within range
+
         indices = np.clip(indices, 0, len(theoretical_cdf)-1)
         cdf_values[mask_middle] = theoretical_cdf[indices]
 
@@ -380,36 +341,29 @@ def fit_yearly_distribution(df, column_name, title, ax):
 def fit_yearly_distribution_plotly(df, column_name, title):
     years = df[column_name].dropna().astype(int)
 
-    # Filter years for 95% CI
     lower_bound = np.percentile(years, 2.5)
     upper_bound = np.percentile(years, 97.5)
     filtered_years = years[(years >= lower_bound) & (years <= upper_bound)]
 
-    # Create histogram
     counts, edges = np.histogram(filtered_years, bins=30, range=(1900, 2020))
     bin_centers = (edges[:-1] + edges[1:]) / 2
 
-    # Filter non-zero counts for log-log fit
     nonzero_mask = counts > 0
     nonzero_counts = counts[nonzero_mask]
     nonzero_bin_centers = bin_centers[nonzero_mask]
 
-    # Log-transform data
     log_bin_centers = np.log10(nonzero_bin_centers)
     log_counts = np.log10(nonzero_counts)
 
-    # Linear regression for power-law fit
     slope, intercept, r_value, p_value, std_err = linregress(log_bin_centers, log_counts)
     fitted_line = slope * log_bin_centers + intercept
 
-    # Power-law fit line
     fitted_bin_centers = 10**log_bin_centers
     fitted_counts = 10**fitted_line
 
-    # Create the Plotly figure
+
     fig = go.Figure()
 
-    # Add histogram
     fig.add_trace(go.Bar(
         x=bin_centers,
         y=counts,
@@ -418,7 +372,6 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         marker=dict(color="blue"),
     ))
 
-    # Add log-log data points
     fig.add_trace(go.Scatter(
         x=nonzero_bin_centers,
         y=nonzero_counts,
@@ -427,7 +380,7 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         marker=dict(color="orange", size=8),
     ))
 
-    # Add power-law fit line
+    # power-law fit line
     fig.add_trace(go.Scatter(
         x=fitted_bin_centers,
         y=fitted_counts,
@@ -436,7 +389,6 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         line=dict(color="red", dash="solid"),
     ))
 
-    # Update layout
     fig.update_layout(
         title=f"Log-Log Plot of Year Counts with Power-Law Fit (95% CI) for {title}",
         xaxis=dict(title="Movie Year", type="linear"),
@@ -447,13 +399,10 @@ def fit_yearly_distribution_plotly(df, column_name, title):
     return fig
 
 
-
 ################################################## Runtimes ######################################################
 def plot_hist_for_runtime(df, column_name, title, upper_bound, ax):
-    # Filter data by upper_bound/3
     filtered_data = df[df[column_name] < (upper_bound)][column_name].dropna()
 
-    # Plot histogram on the provided Axes
     ax.hist(filtered_data, bins=50, alpha=0.5)
     ax.set_xlabel("Movie runtime")
     ax.set_ylabel("Number of movies")
@@ -473,24 +422,22 @@ def plot_boxplot_with_bound_combined(df, column_name, title, upper_bound, color)
     Returns:
         go.Box: A Plotly boxplot trace.
     """
-    # Filter runtime by upper_bound
+    lower_bound = np.percentile(df[column_name].dropna(), 2.5)
+    upper_bound = np.percentile(df[column_name].dropna(), 97.5)
     filtered_data = df[df[column_name] < upper_bound][column_name].dropna()
 
-    # Create the boxplot trace
     boxplot = go.Box(
         x=filtered_data,
         name=f"{title.replace('_',' ')} (UB={upper_bound})",  # Set the name of the boxplot
-        boxmean=True,  # Show mean in the boxplot
-        orientation="h",  # Horizontal boxplot
-        marker=dict(color=color)  # Set the color of the boxplot
+        boxmean=True, 
+        orientation="h", 
+        marker=dict(color=color) 
     )
 
-    # Compute statistics
     first_quartile = filtered_data.quantile(0.25)
     third_quartile = filtered_data.quantile(0.75)
     stats = filtered_data.aggregate(["mean", "median", "std", "min", "max"])
 
-    # Print the statistics
     print(f"Statistics for {title} (UB={upper_bound}):")
     print(f"First quartile: {first_quartile}")
     print(f"Third quartile: {third_quartile}")
@@ -523,17 +470,14 @@ def test_with_distribution(runtimes, title, ax, dist="norm", x_label='Movie Runt
         D, p_value = kstest(filtered_runtimes, 'lognorm', args=(shape, loc, scale))
         pdf_fitted = lognorm.pdf(x, s=shape, scale=scale)
 
-    # Plotting on the provided Axes
     ax.hist(filtered_runtimes, bins=bins, density=True, alpha=0.5, label='Histogram')
     ax.plot(x, pdf_fitted, 'r-', label='Fitted Normal PDF', linewidth=2)
 
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
-    # ax.set_yscale('log')
     ax.set_title(title)
     ax.legend()
 
-    # Print results
     print(f"Results for {title}:")
     print(f"Kolmogorov-Smirnov D statistic: {D:.4f}")
     print(f"P-value: {p_value:.4f}")
@@ -553,7 +497,6 @@ def pie_chart_data(df, type_of_data, top_n=5):
     df_copy["movie_genres"] = df_copy[type_of_data].apply(cleaning_genres)
     df_genres_exploded = df_copy[type_of_data].dropna().str.split(", ", expand=True).stack().str.strip()
 
-    # Filter genres that appear more than 4000 times
     counts = df_genres_exploded.value_counts()
     frequent_genres = counts[:top_n].index
     df_genres_exploded_filtered = df_genres_exploded[df_genres_exploded.isin(frequent_genres)]
@@ -577,36 +520,28 @@ def plot_genre_trends_by_decade(df, dataset_title, top_n_genres=10, min_year=190
     Returns:
         None. Displays the heatmap plot.
     """
-    # Copy the dataset and prepare the genres
     df_movies_copy = df.copy()
     df_movies_copy['movie_genres'] = df_movies_copy['movie_genres'].apply(
         lambda x: x.split(',') if isinstance(x, str) else x
     )
 
-    # Explode genres into separate rows
     df_movies_exploded = df_movies_copy.explode("movie_genres")
 
-    # Filter out infrequent genres
     counts = df_movies_exploded['movie_genres'].value_counts()
     frequent_genres = counts[counts > 0].index
     df_movies_exploded_filtered = df_movies_exploded[df_movies_exploded['movie_genres'].isin(frequent_genres)]
 
-    # Add 'decade' column
     df_movies_exploded_filtered.loc[:, 'decade'] = (df_movies_exploded_filtered['year'] // 10) * 10
 
-    # Filter by decade range
     df_decades = df_movies_exploded_filtered[
         (df_movies_exploded_filtered['decade'] >= min_year) & (df_movies_exploded_filtered['decade'] <= max_year)
     ]
 
-    # Group by decade and genre, then create a pivot table
     genre_counts = df_decades.groupby(['decade', 'movie_genres']).size().unstack(fill_value=0)
 
-    # Select the top N genres
     top_genres = genre_counts.sum().nlargest(top_n_genres).index
     genre_counts_top = genre_counts[top_genres]
 
-    # Plot the heatmap
     plt.figure(figsize=(12, 8))
     sns.heatmap(genre_counts_top, cmap=cmap, annot=True, fmt="d", cbar_kws={'label': 'Count'})
     plt.title(f"Top {top_n_genres} Film Genres from {min_year} to {max_year} (every 10 years) for {dataset_title}")
@@ -633,10 +568,8 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
     Returns:
         None. Saves the interactive heatmap as an HTML file.
     """
-    # Step 1: Filter rows with valid original and remake wikidata IDs
     df_valid = df_movies_total.dropna(subset=['original_wikidata_id', 'remake_wikidata_id'])
 
-    # Step 2: Merge the dataset with itself to get original and remake genres along with vote_average
     merge_columns = ['wikidata_id', 'movie_genres']
     if plot_type in ["mean_vote_averages", "weighted_vote_average"]:
         merge_columns.append('vote_average')
@@ -652,7 +585,6 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
 
     df_merged.rename(columns={'movie_genres_remake': 'remake_genres', 'movie_genres_original': 'original_genres'}, inplace=True)
 
-    # Step 3: Explode genres into individual rows for both originals and remakes
     def explode_genres(df, genre_col):
         df_exploded = df.copy()
         df_exploded[genre_col] = df_exploded[genre_col].str.split(',')
@@ -661,21 +593,17 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
     df_exploded = explode_genres(df_merged, 'original_genres')
     df_exploded = explode_genres(df_exploded, 'remake_genres')
 
-    # Step 4: Clean whitespace and remove invalid genres
     df_exploded['original_genres'] = df_exploded['original_genres'].str.strip()
     df_exploded['remake_genres'] = df_exploded['remake_genres'].str.strip()
     df_exploded = df_exploded.dropna(subset=['original_genres', 'remake_genres'])
 
-    # Step 5: Identify the top N popular genres
     all_genres = pd.concat([df_exploded['original_genres'], df_exploded['remake_genres']])
     top_genres = all_genres.value_counts().head(top_n_genres).index.tolist()
 
-    # Step 6: Filter the data to include only the top genres
     df_exploded_filtered = df_exploded[
         df_exploded['original_genres'].isin(top_genres) & df_exploded['remake_genres'].isin(top_genres)
     ]
     
-    # Step 7: Compute the heatmap data
     if plot_type == "scaled_counts":
         genre_counts = df_exploded_filtered.groupby(['original_genres', 'remake_genres']).size().reset_index(name='count')
         genre_pivot = genre_counts.pivot(index='original_genres', columns='remake_genres', values='count').fillna(0)
@@ -685,13 +613,11 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
             index=genre_pivot.index,
             columns=genre_pivot.columns
         )
-        # color_scale = "YlGnBu"
         title = "Min-Max Scaled Counts of Top Genres (Originals -> Remakes)"
 
     elif plot_type == "mean_vote_averages":
         genre_vote_averages = df_exploded_filtered.groupby(['original_genres', 'remake_genres'])['vote_average_remake'].mean().reset_index()
         heatmap_data = genre_vote_averages.pivot(index='original_genres', columns='remake_genres', values='vote_average_remake').fillna(0)
-        # color_scale = "viridis"
         title = "Mean Vote Averages (Remakes) by Genre (Original -> Remakes)"
 
     elif plot_type == "log_vote_counts":
@@ -699,7 +625,6 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
         genre_vote_counts = df_exploded_filtered.groupby(['original_genres', 'remake_genres'])['vote_count_remake'].mean().reset_index()
         genre_vote_counts['vote_count_remake'] = genre_vote_counts['vote_count_remake'].apply(lambda x: np.log(x) if x > 0 else 0)
         heatmap_data = genre_vote_counts.pivot(index='original_genres', columns='remake_genres', values='vote_count_remake').fillna(0)
-        # color_scale = "coolwarm"
         title = "Log-Transformed Vote Counts by Genre (Original -> Remakes)"
 
     elif plot_type == "weighted_vote_average":
@@ -707,19 +632,17 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
             lambda x: (x['vote_average_remake'] * x['vote_count_remake']).sum() / x['vote_count_remake'].sum()
         ).reset_index(name='weighted_average')
         heatmap_data = genre_vote_averages.pivot(index='original_genres', columns='remake_genres', values='weighted_average').fillna(0)
-        # color_scale = "coolwarm"
         title = "Weighted Vote Averages by Genre (Original -> Remakes)"
 
     else:
         raise ValueError("Invalid plot_type. Choose from 'scaled_counts', 'mean_vote_averages', 'log_vote_counts', or 'weighted_vote_average'.")
 
-    # Step 8: Plot the heatmap using Plotly
     fig = px.imshow(
         heatmap_data,
         labels=dict(x="Remake Genres", y="Original Genres", color=plot_type.replace("_", " ").title()),
         x=heatmap_data.columns,
         y=heatmap_data.index,
-        color_continuous_scale=color_scale,  # color_scale,
+        color_continuous_scale=color_scale, 
         title=title
     )
 
@@ -732,7 +655,6 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
     width=800
     )
 
-    # Save as HTML
     pio.write_html(fig, file=output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive heatmap saved to {output_file}")
 
@@ -740,19 +662,16 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
 
 ################################################## Ratings ######################################################
 def plot_people_perception(df_movies, df_remakes, df_originals, df_rest, column_name, colors, bins=None, is_log=False):
-    # Compute histograms
     counts_whole, edges_whole = np.histogram(df_movies[column_name].dropna(), bins=bins)
     counts_remakes, edges_remakes = np.histogram(df_remakes[column_name].dropna(), bins=bins)
     counts_originals, edges_originals = np.histogram(df_originals[column_name].dropna(), bins=bins)
     counts_rest, edges_rest = np.histogram(df_rest[column_name].dropna(), bins=bins)
 
-    # Compute bin centers
     bin_centers_whole = (edges_whole[:-1] + edges_whole[1:]) / 2
     bin_centers_remakes = (edges_remakes[:-1] + edges_remakes[1:]) / 2
     bin_centers_originals = (edges_originals[:-1] + edges_originals[1:]) / 2
     bin_centers_rest = (edges_rest[:-1] + edges_rest[1:]) / 2
 
-    # Filter zero-count bins for plotting and scaling
     nonzero_whole = counts_whole > 0
     nonzero_remakes = counts_remakes > 0
     nonzero_originals = counts_originals > 0
@@ -768,25 +687,20 @@ def plot_people_perception(df_movies, df_remakes, df_originals, df_rest, column_
     counts_originals = counts_originals[nonzero_originals]
     counts_rest = counts_rest[nonzero_rest]
 
-    # Define a function for min-max scaling
     def min_max_scale(arr):
         return (arr - arr.min()) / (arr.max() - arr.min()) if arr.max() != arr.min() else arr
 
-    # Apply min-max scaling to the counts
     scaled_counts_whole = min_max_scale(counts_whole)
     scaled_counts_remakes = min_max_scale(counts_remakes)
     scaled_counts_originals = min_max_scale(counts_originals)
     scaled_counts_rest = min_max_scale(counts_rest)
 
     plt.figure(figsize=(8, 6))
-    
-    # Plot using scaled counts with updated colors
     plt.plot(bin_centers_whole, scaled_counts_whole, marker='o', linestyle='-', label='Scaled whole dataset', color=colors['whole_dataset'])
     plt.plot(bin_centers_remakes, scaled_counts_remakes, marker='o', linestyle='-', label='Scaled remakes', color=colors['remakes'])
     plt.plot(bin_centers_originals, scaled_counts_originals, marker='o', linestyle='-', label='Scaled originals', color=colors['originals'])
     plt.plot(bin_centers_rest, scaled_counts_rest, marker='o', linestyle='-', label='Scaled rest', color=colors['rest'])
 
-    # Axis labels and title
     plt.xlabel(f'{column_name.replace("_", " ")} scores (log space)' if is_log else f'{column_name.replace("_", " ")} scores', fontsize=12)
     plt.ylabel('Scaled Counts (log scale)', fontsize=12)
     plt.title(f'Log of Min-Max Scaled Counts of Different {column_name.replace("_", " ")} Scores', fontsize=14)
@@ -808,30 +722,26 @@ def create_violin_plot(df_movies, df_remakes, df_originals, output_file="violin_
     Returns:
         None. Saves the plot as an HTML file and displays it.
     """
-    # Add a group label for each dataset
+
     df_movies['group'] = 'All Movies'
     df_remakes['group'] = 'Remakes'
     df_originals['group'] = 'Originals'
 
-    # Combine datasets for plotting
     df_combined = pd.concat([df_movies[['vote_count', 'group']],
                              df_remakes[['vote_count', 'group']],
                              df_originals[['vote_count', 'group']]])
 
     # Remove rows with zero or NaN vote counts
     df_combined = df_combined[df_combined['vote_count'] > 0]
-
-    # Log-transform the vote counts for better visualization
     df_combined['log_vote_count'] = np.log10(df_combined['vote_count'])
 
-    # Create the interactive violin plot using Plotly
     fig = px.violin(
         df_combined,
         x="group",
         y="log_vote_count",
         color="group",
-        box=True,  # Include a box plot inside the violin
-        points=None,  # Hide points
+        box=True,  
+        points=None, 
         hover_data={"log_vote_count": True, "vote_count": True},
         title="Interactive Violin Plot of Log Vote Counts by Group",
         labels={"log_vote_count": "Log(Vote Counts)", "group": "Group"}
@@ -840,7 +750,7 @@ def create_violin_plot(df_movies, df_remakes, df_originals, output_file="violin_
     # Customize layout
     fig.update_layout(
         template="plotly_white",
-        title_x=0.5,  # Center the title
+        title_x=0.5,
         xaxis_title="Group",
         yaxis_title="Log(Vote Counts)",
         legend_title="Group",
@@ -849,11 +759,9 @@ def create_violin_plot(df_movies, df_remakes, df_originals, output_file="violin_
         width=800
     )
 
-    # Save as an HTML file
     fig.write_html(output_file)
     print(f"Violin plot saved as {output_file}")
 
-    # Show the plot
     fig.show()
 
 ################################################## Sentiment ######################################################
@@ -873,15 +781,12 @@ def plot_beta_distribution_with_sentiment(df, sentiment_column, a=5, b=0.6, bins
     Returns:
         float: The calculated RMSE value.
     """
-    # Create the Beta distribution
     rv = beta(a, b)
     x = np.linspace(beta.ppf(0.01, a, b), beta.ppf(0.99, a, b), 100000)
 
-    # Create the plot
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
     ax.plot(x, rv.pdf(x), 'k-', lw=2, label='Beta PDF')
 
-    # Calculate the histogram data
     counts, edges = np.histogram(df[sentiment_column], bins=bins, range=(0, 1))
     bin_centers = (edges[:-1] + edges[1:]) / 2
 
@@ -890,7 +795,6 @@ def plot_beta_distribution_with_sentiment(df, sentiment_column, a=5, b=0.6, bins
     ax.set_xlim([x[0], x[-1]])
     ax.legend(loc='best', frameon=False)
 
-    # Show or save the plot
     if output_file:
         plt.savefig(output_file, bbox_inches='tight')
         print(f"Plot saved as {output_file}")
@@ -918,15 +822,12 @@ def plot_normalized_sentiment_analysis(df_movies, df_remakes, df_originals, colo
     Returns:
         None. Saves the plots as an HTML file and displays them.
     """
-    # Sentiment label counts
     sentiment_labels_analysis = df_movies["sentiment_label"].value_counts(normalize=True) * 100
     sentiment_labels_analysis_remakes = df_remakes["sentiment_label"].value_counts(normalize=True) * 100
     sentiment_labels_analysis_originals = df_originals["sentiment_label"].value_counts(normalize=True) * 100
 
-    # Create a figure
     fig = go.Figure()
 
-    # Bar plot for the whole dataset
     fig.add_trace(go.Bar(
         x=sentiment_labels_analysis.index,
         y=sentiment_labels_analysis.values,
@@ -936,7 +837,6 @@ def plot_normalized_sentiment_analysis(df_movies, df_remakes, df_originals, colo
         textposition="outside"
     ))
 
-    # Bar plot for the remakes dataset
     fig.add_trace(go.Bar(
         x=sentiment_labels_analysis_remakes.index,
         y=sentiment_labels_analysis_remakes.values,
@@ -956,22 +856,19 @@ def plot_normalized_sentiment_analysis(df_movies, df_remakes, df_originals, colo
         textposition="outside"
     ))
 
-    # Update layout
     fig.update_layout(
         title="Normalized Sentiment Label Analysis Across Datasets",
         xaxis=dict(title="Sentiment Labels"),
         yaxis=dict(title="Percentage (%)"),
-        barmode="group",  # Group the bars side by side
+        barmode="group", 
         legend=dict(title="Dataset"),
         template="plotly_white",
         autosize=True,
-        height=600,  # Adaptive height
-        width=800   # Adaptive width
+        height=600,
+        width=800 
     )
 
-    # Save as HTML
     fig.write_html(output_file, auto_open=True, include_plotlyjs="cdn")
     print(f"Interactive normalized sentiment analysis plot saved to {output_file}")
 
-    # Show the plot
     fig.show()
