@@ -304,26 +304,20 @@ def fit_yearly_distribution(df, column_name, title, ax):
     def power_law_cdf(x):
         x = np.asarray(x)
         cdf_values = np.zeros_like(x, dtype=float)
-
         # x < 1900 => CDF = 0
         mask_less = (x < 1900)
         cdf_values[mask_less] = 0.0
-
         # x >= 2020 => CDF = 1
         mask_greater = (x >= 2020)
         cdf_values[mask_greater] = 1.0
-
         # For values between 1900 and 2019
         mask_middle = (~mask_less) & (~mask_greater)
-  
         indices = np.floor(x[mask_middle]).astype(int) - 1900
-
         indices = np.clip(indices, 0, len(theoretical_cdf)-1)
         cdf_values[mask_middle] = theoretical_cdf[indices]
-
         return cdf_values
 
-    # Run KS test
+    # perform KS test
     ks_stat, ks_pvalue = kstest(filtered_years, power_law_cdf)
 
     alpha = 0.05
@@ -428,7 +422,7 @@ def plot_boxplot_with_bound_combined(df, column_name, title, upper_bound, color)
 
     boxplot = go.Box(
         x=filtered_data,
-        name=f"{title.replace('_',' ')} (UB={upper_bound})",  # Set the name of the boxplot
+        name=f"{title.replace('_',' ')} (UB={upper_bound})",
         boxmean=True, 
         orientation="h", 
         marker=dict(color=color) 
@@ -448,25 +442,35 @@ def plot_boxplot_with_bound_combined(df, column_name, title, upper_bound, color)
 
 
 def test_with_distribution(runtimes, title, ax, dist="norm", x_label='Movie Runtime', y_label='Density', bins=50):
+    """
+    Test the runtime data with a specified distribution and plot the results.
+
+    Parameters:
+        runtimes (np.array): Array of movie runtimes.
+        title (str): Title of the plot.
+        ax (plt.Axes): Matplotlib axes object.
+        dist (str): Distribution to test against either 'norm' or 'lognorm' (default is "norm").
+        x_label (str): Label for the x-axis.
+        y_label (str): Label for the y-axis.
+        bins (int): Number of bins for the histogram.
+    """
     lower_bound = np.percentile(runtimes, 2.5)
     upper_bound = np.percentile(runtimes, 97.5)
     filtered_runtimes = runtimes[(runtimes >= 40) & (runtimes <= 160)]
     x = np.linspace(filtered_runtimes.min(), filtered_runtimes.max(), 100)
 
     if dist == "norm":
-        # Fit a normal distribution to the runtimes
+        # fit a normal distribution to the runtimes
         mu, std = norm.fit(filtered_runtimes)
-        # Perform the Kolmogorov-Smirnov test for goodness-of-fit
+        # perform KS test
         D, p_value = kstest(filtered_runtimes, 'norm', args=(mu, std))
         pdf_fitted = norm.pdf(x, mu, std)
     elif dist == "lognorm":
-        # Fit a lognormal distribution to the log of the runtimes
+        # fit a lognormal distribution to the log of the runtimes
         log_data = np.log(filtered_runtimes)
         mu, std = norm.fit(log_data)
-        shape = std
-        scale = np.exp(mu)
-        loc = 0
-        # Perform the Kolmogorov-Smirnov test for goodness-of-fit
+        shape, scale, loc = std, np.exp(mu), 0
+        # perform the KS test
         D, p_value = kstest(filtered_runtimes, 'lognorm', args=(shape, loc, scale))
         pdf_fitted = lognorm.pdf(x, s=shape, scale=scale)
 
@@ -661,7 +665,22 @@ def generate_genre_heatmap(df_movies_total, plot_type, top_n_genres=20, output_f
     fig.show()
 
 ################################################## Ratings ######################################################
-def plot_people_perception(df_movies, df_remakes, df_originals, df_rest, column_name, colors, bins=None, is_log=False):
+def plot_people_perception_plotly(df_movies, df_remakes, df_originals, df_rest, column_name, colors, bins=None, output_file="vote_averages.html"):
+    """
+    Create an interactive plot to visualize scaled counts of a column across multiple datasets.
+
+    Parameters:
+        df_movies (pd.DataFrame): The dataset containing all movies.
+        df_remakes (pd.DataFrame): The dataset containing remakes.
+        df_originals (pd.DataFrame): The dataset containing originals.
+        df_rest (pd.DataFrame): The dataset containing the rest of the movies.
+        column_name (str): The column to analyze.
+        bins (int or list, optional): Number of bins or bin edges for the histograms.
+        output_file (str, optional): The filename to save the interactive plot as an HTML file.
+
+    Returns:
+        None. Displays the plot and saves it to an HTML file.
+    """
     counts_whole, edges_whole = np.histogram(df_movies[column_name].dropna(), bins=bins)
     counts_remakes, edges_remakes = np.histogram(df_remakes[column_name].dropna(), bins=bins)
     counts_originals, edges_originals = np.histogram(df_originals[column_name].dropna(), bins=bins)
@@ -672,20 +691,14 @@ def plot_people_perception(df_movies, df_remakes, df_originals, df_rest, column_
     bin_centers_originals = (edges_originals[:-1] + edges_originals[1:]) / 2
     bin_centers_rest = (edges_rest[:-1] + edges_rest[1:]) / 2
 
-    nonzero_whole = counts_whole > 0
-    nonzero_remakes = counts_remakes > 0
-    nonzero_originals = counts_originals > 0
-    nonzero_rest = counts_rest > 0
+    def filter_nonzero(counts, bin_centers):
+        mask = counts > 0
+        return counts[mask], bin_centers[mask]
 
-    bin_centers_whole = bin_centers_whole[nonzero_whole]
-    bin_centers_remakes = bin_centers_remakes[nonzero_remakes]
-    bin_centers_originals = bin_centers_originals[nonzero_originals]
-    bin_centers_rest = bin_centers_rest[nonzero_rest]
-
-    counts_whole = counts_whole[nonzero_whole]
-    counts_remakes = counts_remakes[nonzero_remakes]
-    counts_originals = counts_originals[nonzero_originals]
-    counts_rest = counts_rest[nonzero_rest]
+    counts_whole, bin_centers_whole = filter_nonzero(counts_whole, bin_centers_whole)
+    counts_remakes, bin_centers_remakes = filter_nonzero(counts_remakes, bin_centers_remakes)
+    counts_originals, bin_centers_originals = filter_nonzero(counts_originals, bin_centers_originals)
+    counts_rest, bin_centers_rest = filter_nonzero(counts_rest, bin_centers_rest)
 
     def min_max_scale(arr):
         return (arr - arr.min()) / (arr.max() - arr.min()) if arr.max() != arr.min() else arr
@@ -695,19 +708,62 @@ def plot_people_perception(df_movies, df_remakes, df_originals, df_rest, column_
     scaled_counts_originals = min_max_scale(counts_originals)
     scaled_counts_rest = min_max_scale(counts_rest)
 
-    plt.figure(figsize=(8, 6))
-    plt.plot(bin_centers_whole, scaled_counts_whole, marker='o', linestyle='-', label='Scaled whole dataset', color=colors['whole_dataset'])
-    plt.plot(bin_centers_remakes, scaled_counts_remakes, marker='o', linestyle='-', label='Scaled remakes', color=colors['remakes'])
-    plt.plot(bin_centers_originals, scaled_counts_originals, marker='o', linestyle='-', label='Scaled originals', color=colors['originals'])
-    plt.plot(bin_centers_rest, scaled_counts_rest, marker='o', linestyle='-', label='Scaled rest', color=colors['rest'])
+    traces = [
+        go.Scatter(
+            x=bin_centers_whole,
+            y=scaled_counts_whole,
+            mode="lines+markers",
+            name="Scaled Whole Dataset",
+            line=dict(color=colors["whole_dataset"]),
+            marker=dict(symbol="circle", size=6)
+        ),
+        go.Scatter(
+            x=bin_centers_remakes,
+            y=scaled_counts_remakes,
+            mode="lines+markers",
+            name="Scaled Remakes",
+            line=dict(color=colors["remakes"]),
+            marker=dict(symbol="square", size=6)
+        ),
+        go.Scatter(
+            x=bin_centers_originals,
+            y=scaled_counts_originals,
+            mode="lines+markers",
+            name="Scaled Originals",
+            line=dict(color=colors["originals"]),
+            marker=dict(symbol="triangle-up", size=6)
+        ),
+        go.Scatter(
+            x=bin_centers_rest,
+            y=scaled_counts_rest,
+            mode="lines+markers",
+            name="Scaled Rest",
+            line=dict(color=colors["rest"]),
+            marker=dict(symbol="diamond", size=6)
+        )
+    ]
 
-    plt.xlabel(f'{column_name.replace("_", " ")} scores (log space)' if is_log else f'{column_name.replace("_", " ")} scores', fontsize=12)
-    plt.ylabel('Scaled Counts (log scale)', fontsize=12)
-    plt.title(f'Log of Min-Max Scaled Counts of Different {column_name.replace("_", " ")} Scores', fontsize=14)
-    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+    fig = go.Figure(data=traces)
+
+    fig.update_layout(
+        title=f"Min-Max Scaled Counts of Different {column_name.replace('_', ' ')} Scores",
+        xaxis=dict(
+            title=f"{column_name.replace('_', ' ')} scores",
+            type="linear"
+        ),
+        yaxis=dict(title="Scaled Counts (0-1)"),
+        template="plotly_white",
+        legend=dict(title="Dataset", orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+        autosize=True,
+        height=600,
+        width=800
+    )
+
+    pio.write_html(fig, file=output_file, auto_open=True, include_plotlyjs="cdn")
+    print(f"Interactive plot saved to {output_file}")
+
+    fig.show()
+
 
 def create_violin_plot(df_movies, df_remakes, df_originals, output_file="violin_plot.html"):
     """
@@ -790,7 +846,7 @@ def plot_beta_distribution_with_sentiment(df, sentiment_column, a=5, b=0.6, bins
     counts, edges = np.histogram(df[sentiment_column], bins=bins, range=(0, 1))
     bin_centers = (edges[:-1] + edges[1:]) / 2
 
-    # Overlay the histogram
+    # overlay the histogram
     ax.hist(df[sentiment_column], density=True, bins=bins, histtype='stepfilled', alpha=0.2, label='Data Histogram')
     ax.set_xlim([x[0], x[-1]])
     ax.legend(loc='best', frameon=False)
@@ -801,7 +857,7 @@ def plot_beta_distribution_with_sentiment(df, sentiment_column, a=5, b=0.6, bins
     else:
         plt.show()
 
-    # Calculate RMSE
+    # calculate RMSE
     beta_pdf = rv.pdf(bin_centers)
     rmse = np.sqrt(np.mean((beta_pdf - counts / counts.sum()) ** 2))
     print(f"RMSE for the sentiment score: {rmse}")
@@ -846,7 +902,7 @@ def plot_normalized_sentiment_analysis(df_movies, df_remakes, df_originals, colo
         textposition="outside"
     ))
 
-    # Bar plot for the originals dataset
+    # bar plot for the originals dataset
     fig.add_trace(go.Bar(
         x=sentiment_labels_analysis_originals.index,
         y=sentiment_labels_analysis_originals.values,
