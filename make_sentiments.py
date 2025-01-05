@@ -4,6 +4,7 @@ import csv
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForSeq2SeqLM
 import torch
 from tqdm import tqdm
+from config.ada_config.config import CONFIG
 
 # from google.colab import drive
 # drive.mount('/content/drive')
@@ -124,7 +125,7 @@ def sentiment_analysis(df_plots, tokenizer_name, model_name="distilbert-base-unc
     return sentiment_results
 
 if __name__ == "__main__":
-    df_movies = pd.read_csv('enrich_movie_data.csv')
+    df_movies = pd.read_csv(CONFIG["data_path"] / "enrich_movie_data.csv")
     df_plots = df_movies.copy()
     df_plots = df_plots["movie_summary"].dropna()
     print("Number of available summaries in the enrich dataset:",len(df_plots))
