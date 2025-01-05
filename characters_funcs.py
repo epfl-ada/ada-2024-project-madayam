@@ -2,18 +2,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import math
 
 from IPython.core.pylabtools import figsize
 from statsmodels.stats import diagnostic
 from scipy import stats
-import json
-import ast
-from pathlib import Path
-from collections import Counter
-import plotly.express as px
-from googleapiclient.discovery import build
-import time
 from scipy.stats import lognorm, shapiro, probplot, kstest, norm, linregress, stats
 from scipy.stats import norm, lognorm, expon, gamma, beta, powerlaw, gaussian_kde
 import plotly.graph_objects as go
@@ -25,6 +17,18 @@ from config.ada_config.config import CONFIG
 
 ########################################### Actor Age ###########################################
 def get_movie_year(movie_year, lower_bound=1906, upper_bound=2025, typo_bound=1025):
+    """
+    Extract the movie year from the movie_year column.
+
+    Parameters:
+        movie_year (str or int): The movie year to extract.
+        lower_bound (int): The lower bound for the movie year (default is 1906).
+        upper_bound (int): The upper bound for the movie year (default is 2025).
+        typo_bound (int): The typo bound for the movie year (default is 1025).
+    
+    Returns:
+        str or int: The extracted movie year if it is within the bounds, otherwise None.
+    """
     if type(movie_year) == str:
         new_movie_year = movie_year.split("-")[0]
         if int(new_movie_year) > lower_bound and int(new_movie_year) < upper_bound:
@@ -110,6 +114,15 @@ def test_fit_dist_qplot(ages, x_label='Actor Age', y_label='Density', dist="norm
 
 ###################################################### Crew ######################################################
 def preprocess_populairty_crew(df):
+    """
+    Preprocess the popularity data for the crew members in the dataset.
+
+    Parameters:
+        df (pd.DataFrame): DataFrame containing the movie data.
+    
+    Returns:
+        pd.DataFrame: DataFrame with the crew popularity data preprocessed.
+    """
     df_popularity_crew = df.copy()
 
     df_popularity_crew = df_popularity_crew.dropna(subset=["star_1_popularity", "star_2_popularity", "star_3_popularity", "Director_popularity", "Writer_popularity", "Producer_popularity"])
@@ -126,6 +139,15 @@ def preprocess_populairty_crew(df):
     return df_popularity_crew
 
 def plot_popularity_crew(df_popularity_crew_remakes, df_popularity_crew_originals, df_popularity_crew_rest, column='total_popularity'):
+    """
+    Plot KDE plots for total popularity for remakes, originals, and rest datasets.
+
+    Parameters:
+        df_popularity_crew_remakes (pd.DataFrame): DataFrame containing popularity data for remakes.
+        df_popularity_crew_originals (pd.DataFrame): DataFrame containing popularity data for originals.
+        df_popularity_crew_rest (pd.DataFrame): DataFrame containing popularity data for rest of the movies.
+        column (str): The column to visualize (default is 'total_popularity').
+    """
     fig, ax = plt.subplots(1,1, figsize=(12,6))
     sns.kdeplot(df_popularity_crew_remakes[column], label=f'Remakes {column.replace("_", " ")}', color='blue', fill=True, ax=ax)
     ax.vlines(df_popularity_crew_remakes[column].mean(), 0, 2, color='blue', linestyle='--', label=f'Mean Remakes {column.replace("_", " ")}')
@@ -223,107 +245,6 @@ def plot_popularity_crew_plotly_smooth(df_popularity_crew_remakes, df_popularity
 
     fig.write_html(output_file, include_plotlyjs="cdn", auto_open=True)
     print(f"Plot saved to {output_file}")
-    fig.show()
-
-
-def plot_people_perception_interactive(df_movies, df_remakes, df_originals, df_rest, column_name, colors, bins=None, is_log=False, output_file="vote_averages.html"):
-    """
-    Create an interactive plot to visualize scaled counts of a column across multiple datasets.
-
-    Parameters:
-        df_movies (pd.DataFrame): The dataset containing all movies.
-        df_remakes (pd.DataFrame): The dataset containing remakes.
-        df_originals (pd.DataFrame): The dataset containing originals.
-        df_rest (pd.DataFrame): The dataset containing the rest of the movies.
-        column_name (str): The column to analyze.
-        bins (int or list, optional): Number of bins or bin edges for the histograms.
-        is_log (bool, optional): Whether to use a log scale for the x-axis.
-        output_file (str, optional): The filename to save the interactive plot as an HTML file.
-
-    Returns:
-        None. Displays the plot and saves it to an HTML file.
-    """
-    counts_whole, edges_whole = np.histogram(df_movies[column_name].dropna(), bins=bins)
-    counts_remakes, edges_remakes = np.histogram(df_remakes[column_name].dropna(), bins=bins)
-    counts_originals, edges_originals = np.histogram(df_originals[column_name].dropna(), bins=bins)
-    counts_rest, edges_rest = np.histogram(df_rest[column_name].dropna(), bins=bins)
-
-    bin_centers_whole = (edges_whole[:-1] + edges_whole[1:]) / 2
-    bin_centers_remakes = (edges_remakes[:-1] + edges_remakes[1:]) / 2
-    bin_centers_originals = (edges_originals[:-1] + edges_originals[1:]) / 2
-    bin_centers_rest = (edges_rest[:-1] + edges_rest[1:]) / 2
-
-    def filter_nonzero(counts, bin_centers):
-        mask = counts > 0
-        return counts[mask], bin_centers[mask]
-
-    counts_whole, bin_centers_whole = filter_nonzero(counts_whole, bin_centers_whole)
-    counts_remakes, bin_centers_remakes = filter_nonzero(counts_remakes, bin_centers_remakes)
-    counts_originals, bin_centers_originals = filter_nonzero(counts_originals, bin_centers_originals)
-    counts_rest, bin_centers_rest = filter_nonzero(counts_rest, bin_centers_rest)
-
-    def min_max_scale(arr):
-        return (arr - arr.min()) / (arr.max() - arr.min()) if arr.max() != arr.min() else arr
-
-    scaled_counts_whole = min_max_scale(counts_whole)
-    scaled_counts_remakes = min_max_scale(counts_remakes)
-    scaled_counts_originals = min_max_scale(counts_originals)
-    scaled_counts_rest = min_max_scale(counts_rest)
-
-    traces = [
-        go.Scatter(
-            x=bin_centers_whole,
-            y=scaled_counts_whole,
-            mode="lines+markers",
-            name="Scaled Whole Dataset",
-            line=dict(color=colors["whole_dataset"]),
-            marker=dict(symbol="circle", size=6)
-        ),
-        go.Scatter(
-            x=bin_centers_remakes,
-            y=scaled_counts_remakes,
-            mode="lines+markers",
-            name="Scaled Remakes",
-            line=dict(color=colors["remakes"]),
-            marker=dict(symbol="square", size=6)
-        ),
-        go.Scatter(
-            x=bin_centers_originals,
-            y=scaled_counts_originals,
-            mode="lines+markers",
-            name="Scaled Originals",
-            line=dict(color=colors["originals"]),
-            marker=dict(symbol="triangle-up", size=6)
-        ),
-        go.Scatter(
-            x=bin_centers_rest,
-            y=scaled_counts_rest,
-            mode="lines+markers",
-            name="Scaled Rest",
-            line=dict(color=colors["rest"]),
-            marker=dict(symbol="diamond", size=6)
-        )
-    ]
-
-    fig = go.Figure(data=traces)
-
-    fig.update_layout(
-        title=f"Log of Min-Max Scaled Counts of Different {column_name.replace('_', ' ')} Scores",
-        xaxis=dict(
-            title=f"{column_name.replace('_', ' ')} scores" if is_log else f"{column_name.replace('_', ' ')} scores",
-            type="log" if is_log else "linear"
-        ),
-        yaxis=dict(title="Scaled Counts (0-1)"),
-        template="plotly_white",
-        legend=dict(title="Dataset", orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
-        autosize=True,
-        height=600,
-        width=800
-    )
-
-    pio.write_html(fig, file=output_file, auto_open=True, include_plotlyjs="cdn")
-    print(f"Interactive plot saved to {output_file}")
-
     fig.show()
 
 def plot_average_star_popularity(df_movies, df_remakes, df_originals, colors, output_file="average_star_popularity.html"):
