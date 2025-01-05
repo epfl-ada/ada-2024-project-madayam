@@ -376,7 +376,7 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         x=nonzero_bin_centers,
         y=nonzero_counts,
         mode="markers",
-        name="Data (log-log)",
+        name="Data Points",
         marker=dict(color="orange", size=8),
     ))
 
@@ -385,14 +385,14 @@ def fit_yearly_distribution_plotly(df, column_name, title):
         x=fitted_bin_centers,
         y=fitted_counts,
         mode="lines",
-        name=f"Power-Law Fit (slope={slope:.2f}) for {title}",
+        name=f"Power-Law Fit (log-log slope={slope:.2f}) for {title}",
         line=dict(color="red", dash="solid"),
     ))
 
     fig.update_layout(
-        title=f"Log-Log Plot of Year Counts with Power-Law Fit (95% CI) for {title}",
+        title=f"Plot of Year Counts with Power-Law Fit (95% CI) for {title}",
         xaxis=dict(title="Movie Year", type="linear"),
-        yaxis=dict(title="Number of Movies (log scale)", type="log"),
+        yaxis=dict(title="Number of Movies", type="linear"),
         legend=dict(x=0.02, y=0.98),
         template="plotly_white",
     )
